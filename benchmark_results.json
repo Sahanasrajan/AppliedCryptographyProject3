@@ -1,0 +1,337 @@
+[
+  {
+    "n": 100,
+    "upload_he_s": 0.072,
+    "upload_plain_s": 0.000672,
+    "queries": {
+      "Q1_avg_burn_rate": {
+        "he_result": 0.484595,
+        "pt_result": 0.484595,
+        "he_time_s": 0.043,
+        "pt_time_s": 7.2e-05,
+        "abs_error": 3e-08,
+        "speedup_plain_vs_he": 592.7
+      },
+      "Q2_avg_mental_fatigue": {
+        "he_result": 4.8598,
+        "pt_result": 4.8598,
+        "he_time_s": 0.0494,
+        "pt_time_s": 5.1e-05,
+        "abs_error": 3e-08
+      },
+      "Q3_weighted_burn_risk": {
+        "he_result": 5.3445,
+        "pt_result": 5.3445,
+        "he_time_s": 0.0266,
+        "pt_time_s": 3e-05,
+        "abs_error": 4e-06
+      },
+      "Q4_scaled_hours": {
+        "he_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "pt_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "he_time_s": 0.0035,
+        "pt_time_s": 2e-05,
+        "max_abs_error_first10": 2.2e-07
+      },
+      "Q5_stress_index": {
+        "he_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "pt_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "he_time_s": 0.0053,
+        "pt_time_s": 1.5e-05,
+        "max_abs_error_first10": 0.0
+      }
+    }
+  },
+  {
+    "n": 500,
+    "upload_he_s": 0.0543,
+    "upload_plain_s": 0.000465,
+    "queries": {
+      "Q1_avg_burn_rate": {
+        "he_result": 0.4735,
+        "pt_result": 0.4735,
+        "he_time_s": 0.1201,
+        "pt_time_s": 6.1e-05,
+        "abs_error": 0.0,
+        "speedup_plain_vs_he": 1960.4
+      },
+      "Q2_avg_mental_fatigue": {
+        "he_result": 4.94362,
+        "pt_result": 4.94362,
+        "he_time_s": 0.1035,
+        "pt_time_s": 5.4e-05,
+        "abs_error": 0.0
+      },
+      "Q3_weighted_burn_risk": {
+        "he_result": 27.2371,
+        "pt_result": 27.2371,
+        "he_time_s": 0.0659,
+        "pt_time_s": 4e-05,
+        "abs_error": 3e-06
+      },
+      "Q4_scaled_hours": {
+        "he_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "pt_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "he_time_s": 0.0037,
+        "pt_time_s": 2.6e-05,
+        "max_abs_error_first10": 2.2e-07
+      },
+      "Q5_stress_index": {
+        "he_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "pt_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "he_time_s": 0.0058,
+        "pt_time_s": 1.8e-05,
+        "max_abs_error_first10": 0.0
+      }
+    }
+  },
+  {
+    "n": 1000,
+    "upload_he_s": 0.0746,
+    "upload_plain_s": 0.000466,
+    "queries": {
+      "Q1_avg_burn_rate": {
+        "he_result": 0.473575,
+        "pt_result": 0.473575,
+        "he_time_s": 0.117,
+        "pt_time_s": 6.2e-05,
+        "abs_error": 1e-08,
+        "speedup_plain_vs_he": 1880.2
+      },
+      "Q2_avg_mental_fatigue": {
+        "he_result": 4.90671,
+        "pt_result": 4.90671,
+        "he_time_s": 0.1206,
+        "pt_time_s": 5.3e-05,
+        "abs_error": 1e-08
+      },
+      "Q3_weighted_burn_risk": {
+        "he_result": 54.7591,
+        "pt_result": 54.7591,
+        "he_time_s": 0.0739,
+        "pt_time_s": 5.6e-05,
+        "abs_error": 2e-06
+      },
+      "Q4_scaled_hours": {
+        "he_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "pt_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "he_time_s": 0.0034,
+        "pt_time_s": 2.8e-05,
+        "max_abs_error_first10": 2.2e-07
+      },
+      "Q5_stress_index": {
+        "he_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "pt_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "he_time_s": 0.0058,
+        "pt_time_s": 3.1e-05,
+        "max_abs_error_first10": 0.0
+      }
+    }
+  },
+  {
+    "n": 3000,
+    "upload_he_s": 0.0756,
+    "upload_plain_s": 0.000548,
+    "queries": {
+      "Q1_avg_burn_rate": {
+        "he_result": 0.46831,
+        "pt_result": 0.46831,
+        "he_time_s": 0.1402,
+        "pt_time_s": 6.4e-05,
+        "abs_error": 0.0,
+        "speedup_plain_vs_he": 2186.7
+      },
+      "Q2_avg_mental_fatigue": {
+        "he_result": 4.948453,
+        "pt_result": 4.948453,
+        "he_time_s": 0.1348,
+        "pt_time_s": 5.5e-05,
+        "abs_error": 0.0
+      },
+      "Q3_weighted_burn_risk": {
+        "he_result": 160.3489,
+        "pt_result": 160.3489,
+        "he_time_s": 0.0857,
+        "pt_time_s": 0.000116,
+        "abs_error": 3e-05
+      },
+      "Q4_scaled_hours": {
+        "he_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "pt_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "he_time_s": 0.0035,
+        "pt_time_s": 4.5e-05,
+        "max_abs_error_first10": 2.2e-07
+      },
+      "Q5_stress_index": {
+        "he_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "pt_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "he_time_s": 0.0058,
+        "pt_time_s": 4.2e-05,
+        "max_abs_error_first10": 0.0
+      }
+    }
+  },
+  {
+    "n": 7000,
+    "upload_he_s": 0.1289,
+    "upload_plain_s": 0.000471,
+    "queries": {
+      "Q1_avg_burn_rate": {
+        "he_result": 0.468732,
+        "pt_result": 0.468732,
+        "he_time_s": 0.1736,
+        "pt_time_s": 7.2e-05,
+        "abs_error": 0.0,
+        "speedup_plain_vs_he": 2418.9
+      },
+      "Q2_avg_mental_fatigue": {
+        "he_result": 4.993321,
+        "pt_result": 4.993321,
+        "he_time_s": 0.1634,
+        "pt_time_s": 5.6e-05,
+        "abs_error": 0.0
+      },
+      "Q3_weighted_burn_risk": {
+        "he_result": 373.6975,
+        "pt_result": 373.6974,
+        "he_time_s": 0.0865,
+        "pt_time_s": 0.000252,
+        "abs_error": 6.3e-05
+      },
+      "Q4_scaled_hours": {
+        "he_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "pt_sample5": [
+          1.1,
+          1.3,
+          1.625,
+          1.5,
+          0.925
+        ],
+        "he_time_s": 0.034,
+        "pt_time_s": 8.1e-05,
+        "max_abs_error_first10": 2.2e-07
+      },
+      "Q5_stress_index": {
+        "he_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "pt_sample5": [
+          6.88,
+          8.59,
+          4.3,
+          12.03,
+          7.57
+        ],
+        "he_time_s": 0.012,
+        "pt_time_s": 7.9e-05,
+        "max_abs_error_first10": 0.0
+      }
+    }
+  }
+]
