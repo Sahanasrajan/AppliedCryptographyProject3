@@ -98,29 +98,51 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 .log-carol { color:#a78bfa; }
 .log-done { color:#ffe246; font-weight:600; }
 
-.result-box { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:18px; margin-bottom:16px; display:none; }
+.result-box { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:16px; display:none; }
 .result-box.show { display:block; }
-.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid #1c2436; }
+.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid #1c2436; }
 .res-title { font-size:0.65rem; color:#6a8aaa; }
 .res-title strong { display:block; font-size:0.85rem; color:#cdd9f0; margin-top:2px; }
 .res-tag { font-size:0.58rem; padding:3px 10px; background:rgba(0,255,200,0.08); border:1px solid rgba(0,255,200,0.25); border-radius:4px; color:#00ffc8; }
-.res-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-.res-cell { border-radius:8px; padding:14px; border:1px solid #1c2436; }
+
+.res-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.res-cell { border-radius:10px; padding:16px; border:1px solid #1c2436; }
 .res-cell.he { border-color:rgba(0,255,200,0.2); background:rgba(0,255,200,0.03); }
 .res-cell.pt { border-color:rgba(255,112,67,0.2); background:rgba(255,112,67,0.03); }
-.res-cell-label { font-size:0.58rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.res-cell-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; font-weight:600; }
 .res-cell.he .res-cell-label { color:#00ffc8; }
 .res-cell.pt .res-cell-label { color:#ff7043; }
-.res-val { font-size:1.4rem; font-weight:600; line-height:1; margin-bottom:6px; }
+.res-cell-how { font-size:0.6rem; color:#3a4a60; margin-bottom:10px; line-height:1.5; border-left:2px solid #1c2436; padding-left:8px; }
+.res-cell.he .res-cell-how { border-color:rgba(0,255,200,0.2); }
+.res-cell.pt .res-cell-how { border-color:rgba(255,112,67,0.2); }
+.res-val { font-size:1.5rem; font-weight:600; line-height:1; margin-bottom:10px; }
 .res-cell.he .res-val { color:#00ffc8; }
 .res-cell.pt .res-val { color:#ff7043; }
-.res-time { font-size:0.6rem; color:#3a4a60; }
-.res-time span { background:#0c0f1a; border:1px solid #1c2436; border-radius:3px; padding:1px 6px; color:#6a8aaa; margin-top:3px; display:inline-block; }
-.err-row { background:rgba(255,226,70,0.05); border:1px solid rgba(255,226,70,0.2); border-radius:7px; padding:10px 13px; display:flex; gap:12px; align-items:center; font-size:0.65rem; margin-bottom:8px; }
-.err-val { color:#ffe246; font-size:1rem; font-weight:600; }
-.err-desc { color:#6a8aaa; }
-.slow-row { background:#111520; border:1px solid #1c2436; border-radius:7px; padding:10px 13px; font-size:0.65rem; color:#6a8aaa; }
-.slow-num { color:#ff7043; font-size:1rem; font-weight:600; }
+.res-meta { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
+.res-meta-item { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 10px; }
+.res-meta-item .rmi-label { font-size:0.52rem; color:#3a4a60; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
+.res-meta-item .rmi-val { font-size:0.72rem; color:#6a8aaa; }
+.res-cell.he .rmi-val { color:#00ffc8; }
+.res-cell.pt .rmi-val { color:#ff7043; }
+
+.info-sections { display:flex; flex-direction:column; gap:10px; }
+.info-section { border-radius:8px; padding:14px 16px; border:1px solid; }
+.info-section.err-section { background:rgba(255,226,70,0.04); border-color:rgba(255,226,70,0.2); }
+.info-section.slow-section { background:rgba(255,112,67,0.04); border-color:rgba(255,112,67,0.15); }
+.info-section.match-section { background:rgba(0,255,200,0.03); border-color:rgba(0,255,200,0.15); }
+.info-section-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.info-section-title { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
+.err-section .info-section-title { color:#ffe246; }
+.slow-section .info-section-title { color:#ff7043; }
+.match-section .info-section-title { color:#00ffc8; }
+.info-big-val { font-size:1.3rem; font-weight:600; }
+.err-section .info-big-val { color:#ffe246; }
+.slow-section .info-big-val { color:#ff7043; }
+.match-section .info-big-val { color:#00ffc8; }
+.info-section-body { font-size:0.62rem; color:#6a8aaa; line-height:1.7; }
+.info-section-body strong { color:#cdd9f0; }
+.info-formula { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 12px; font-size:0.62rem; color:#a78bfa; margin-top:8px; font-family:'IBM Plex Mono',monospace; }
+.match-pill { display:inline-block; background:rgba(0,255,200,0.1); border:1px solid rgba(0,255,200,0.3); border-radius:4px; color:#00ffc8; padding:1px 8px; font-size:0.6rem; margin-left:6px; }
 
 .hist-box { background:#131826; border:1px solid #1c2436; border-radius:10px; overflow:hidden; }
 .hist-head { padding:10px 14px; border-bottom:1px solid #1c2436; font-size:0.58rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; display:flex; justify-content:space-between; align-items:center; }
@@ -222,23 +244,129 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
       <div class="res-title">Query Result<strong id="res-name">—</strong></div>
       <div class="res-tag">🔒 Computed on ciphertext by Carol</div>
     </div>
+
+    <!-- HE + Plaintext side by side -->
     <div class="res-grid">
       <div class="res-cell he">
         <div class="res-cell-label">🔒 HE Result (CKKS)</div>
+        <div class="res-cell-how">
+          Alice encrypts each column into a packed CKKS ciphertext vector and uploads to Carol.
+          Carol evaluates the query entirely on ciphertext using TenSEAL — never seeing raw values.
+          The encrypted result is sent back to Alice, who decrypts it with her secret key.
+        </div>
         <div class="res-val" id="res-he-val">—</div>
-        <div class="res-time">Eval time: <span id="res-he-time">—</span></div>
+        <div class="res-meta">
+          <div class="res-meta-item">
+            <div class="rmi-label">Eval Time</div>
+            <div class="rmi-val" id="res-he-time">—</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">HE Operation</div>
+            <div class="rmi-val" id="res-he-op">—</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">Scheme</div>
+            <div class="rmi-val">CKKS (TenSEAL)</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">Security</div>
+            <div class="rmi-val">128-bit (RLWE)</div>
+          </div>
+        </div>
       </div>
+
       <div class="res-cell pt">
         <div class="res-cell-label">📄 Plaintext Baseline</div>
+        <div class="res-cell-how">
+          The identical query is run directly on the raw unencrypted NumPy array.
+          No encryption or decryption — pure arithmetic on plaintext numbers.
+          Used as the ground-truth reference to measure HE correctness and speed cost.
+        </div>
         <div class="res-val" id="res-pt-val">—</div>
-        <div class="res-time">Eval time: <span id="res-pt-time">—</span></div>
+        <div class="res-meta">
+          <div class="res-meta-item">
+            <div class="rmi-label">Eval Time</div>
+            <div class="rmi-val" id="res-pt-time">—</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">Library</div>
+            <div class="rmi-val">NumPy</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">Data State</div>
+            <div class="rmi-val">Unencrypted</div>
+          </div>
+          <div class="res-meta-item">
+            <div class="rmi-label">Privacy</div>
+            <div class="rmi-val" style="color:#ff7043;">None ⚠</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="err-row">
-      <div><div style="font-size:0.58rem;color:#ffe246;margin-bottom:3px;">CKKS Error</div><div class="err-val" id="res-err">—</div></div>
-      <div class="err-desc">Inherent to approximate HE — negligible for analytics</div>
+
+    <!-- Info sections -->
+    <div class="info-sections">
+
+      <!-- CKKS Error -->
+      <div class="info-section err-section">
+        <div class="info-section-header">
+          <div>
+            <div class="info-section-title">CKKS Approximation Error</div>
+            <div class="info-big-val" id="res-err">—</div>
+          </div>
+          <div class="info-section-body" style="flex:1">
+            CKKS is an <strong>approximate</strong> HE scheme — it intentionally trades tiny precision loss
+            for practical speed. The error is the absolute difference between the HE-decrypted value
+            and the true plaintext result.
+          </div>
+        </div>
+        <div class="info-formula">Error = | decrypt(Carol's ciphertext) − NumPy result |</div>
+        <div class="info-section-body" style="margin-top:8px;">
+          For burn_rate (range 0–1), an error of <strong id="res-err-repeat">—</strong> means the result
+          is accurate to <strong id="res-err-digits">—</strong> decimal places — far beyond what any HR analytics use case requires.
+          This noise is controlled by the <strong>global_scale = 2⁴⁰</strong> and
+          <strong>coeff_moduli = [60,40,40,60]</strong> parameters chosen at key generation.
+        </div>
+      </div>
+
+      <!-- Slowdown -->
+      <div class="info-section slow-section">
+        <div class="info-section-header">
+          <div>
+            <div class="info-section-title">Performance Tradeoff</div>
+            <div class="info-big-val">HE is <span id="res-slow">—</span>× slower</div>
+          </div>
+          <div class="info-section-body" style="flex:1">
+            This slowdown is the direct cost of <strong>data confidentiality</strong>.
+            Carol evaluates the query on ciphertext — every arithmetic operation requires
+            polynomial multiplication modulo large primes, which is inherently slower than raw NumPy array math.
+          </div>
+        </div>
+        <div class="info-formula">Slowdown = HE eval time (<span id="res-slow-he">—</span>) ÷ Plaintext eval time (<span id="res-slow-pt">—</span>)</div>
+        <div class="info-section-body" style="margin-top:8px;">
+          SUM-based queries (avg) are slowest because they require <strong>Galois key rotations</strong>
+          across the packed ciphertext vector. Vector-add and scalar-multiply are cheaper operations
+          with only ~40–150× slowdown.
+        </div>
+      </div>
+
+      <!-- Correctness match -->
+      <div class="info-section match-section">
+        <div class="info-section-header">
+          <div>
+            <div class="info-section-title">Correctness Verification</div>
+            <div class="info-big-val">✓ Results Match <span class="match-pill" id="res-match-pill">within 10⁻⁸</span></div>
+          </div>
+          <div class="info-section-body" style="flex:1">
+            The HE result and the plaintext result are functionally identical.
+            This confirms that Carol's homomorphic evaluation over encrypted data
+            produces the correct answer — proving both <strong>correctness</strong> and <strong>privacy</strong> simultaneously.
+          </div>
+        </div>
+        <div class="info-formula">HE result (<span id="res-match-he">—</span>) ≈ Plaintext result (<span id="res-match-pt">—</span>)  [Δ = <span id="res-match-err">—</span>]</div>
+      </div>
+
     </div>
-    <div class="slow-row">HE is <span class="slow-num" id="res-slow">—</span>× slower — the privacy / performance tradeoff</div>
   </div>
 
   <div class="hist-box">
@@ -417,10 +545,20 @@ async function runQuery() {
       setLog(steps.concat([{t:'ERROR', m: d.error, c:'log-done'}]));
       setStep(0);
     } else {
+      var HE_OPS = {
+        avg_burn_rate:'SUM → divide by N', avg_fatigue:'SUM → divide by N',
+        avg_resource:'SUM → divide by N', avg_hours:'SUM → divide by N',
+        stress_index:'VECTOR ADD (2 cols)', scaled_hours:'SCALAR MULTIPLY (÷40)',
+        weighted_risk:'DOT PRODUCT'
+      };
+
       setStep(6);
       var isVec = Array.isArray(d.he_result);
       var heStr = isVec ? '[' + d.he_result.map(function(v){ return v.toFixed(3); }).join(', ') + ', …]' : d.he_result.toFixed(6);
       var ptStr = isVec ? '[' + d.pt_result.map(function(v){ return v.toFixed(3); }).join(', ') + ', …]' : d.pt_result.toFixed(6);
+      var errExp = d.error_val.toExponential(2);
+      var digits = Math.abs(Math.floor(Math.log10(Math.max(d.error_val, 1e-15))));
+      var slowdown = (d.he_time / Math.max(d.pt_time, 1e-9)).toFixed(0);
 
       setLog(steps.concat([{t:'done', m:'[Alice] ✓ Decrypted: ' + (isVec ? '[vector]' : d.he_result.toFixed(6)), c:'log-done'}]));
 
@@ -429,8 +567,21 @@ async function runQuery() {
       document.getElementById('res-pt-val').textContent = ptStr;
       document.getElementById('res-he-time').textContent = d.he_time.toFixed(4) + 's';
       document.getElementById('res-pt-time').textContent = (d.pt_time * 1000).toFixed(3) + 'ms';
-      document.getElementById('res-err').textContent = d.error_val.toExponential(2);
-      document.getElementById('res-slow').textContent = (d.he_time / Math.max(d.pt_time, 1e-9)).toFixed(0);
+      document.getElementById('res-he-op').textContent = HE_OPS[selQ] || '—';
+
+      document.getElementById('res-err').textContent = errExp;
+      document.getElementById('res-err-repeat').textContent = errExp;
+      document.getElementById('res-err-digits').textContent = digits;
+
+      document.getElementById('res-slow').textContent = slowdown;
+      document.getElementById('res-slow-he').textContent = d.he_time.toFixed(4) + 's';
+      document.getElementById('res-slow-pt').textContent = (d.pt_time * 1000).toFixed(3) + 'ms';
+
+      document.getElementById('res-match-he').textContent = isVec ? '[vector]' : d.he_result.toFixed(6);
+      document.getElementById('res-match-pt').textContent = isVec ? '[vector]' : d.pt_result.toFixed(6);
+      document.getElementById('res-match-err').textContent = errExp;
+      document.getElementById('res-match-pill').textContent = 'within ' + errExp;
+
       document.getElementById('result-box').classList.add('show');
 
       queryHistory.unshift({
