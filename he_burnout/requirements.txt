@@ -1,5 +1,0 @@
-tenseal
-pandas
-numpy
-matplotlib
-flask
