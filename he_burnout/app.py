@@ -41,6 +41,9 @@ BENCH = [
   {"n":7000,"uhe":0.129,"upt":0.000471,"q":{"Q1":{"ht":0.174,"pt":0.000072,"e":2e-9},"Q2":{"ht":0.163,"pt":0.000056,"e":1.9e-9},"Q3":{"ht":0.087,"pt":0.000252,"e":6.3e-5},"Q4":{"ht":0.034,"pt":0.000081,"e":2.2e-7},"Q5":{"ht":0.012,"pt":0.000079,"e":4.4e-9}}}
 ]
 
+_cmp_path = os.path.join(os.path.dirname(__file__), "benchmark_results.json")
+BENCH_COMPARE = json.load(open(_cmp_path)) if os.path.exists(_cmp_path) else []
+
 HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -387,6 +390,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
     <button class="chart-tab" id="ct-qtime" onclick="showChart('qtime')">Query Execution Time</button>
     <button class="chart-tab" id="ct-slow" onclick="showChart('slow')">Slowdown Factor</button>
     <button class="chart-tab" id="ct-err" onclick="showChart('err')">CKKS Error</button>
+    <button class="chart-tab" id="ct-bfv" onclick="showChart('bfv')">CKKS vs BFV</button>
   </div>
 
   <div class="chart-panel active" id="cp-upload">
@@ -429,6 +433,15 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
       <div class="chart-sub">|HE result − Plaintext result| for all 5 queries. Log scale.</div>
       <div class="chart-wrap"><canvas id="ch-err"></canvas></div>
       <div class="insight"><strong>Key insight:</strong> All errors below <strong>10⁻⁷</strong> — completely negligible for analytics on burn_rate (range 0–1).</div>
+    </div>
+  </div>
+
+  <div class="chart-panel" id="cp-bfv">
+    <div class="chart-card">
+      <div class="chart-title">CKKS vs BFV — All Queries at N = 7,000</div>
+      <div class="chart-sub">Same 5 queries run under both schemes. BFV uses integer-scaled arithmetic via Pyfhel; CKKS uses native floats via TenSEAL.</div>
+      <div class="chart-wrap-tall"><canvas id="ch-bfv"></canvas></div>
+      <div class="insight"><strong>Key insight:</strong> CKKS is ~3.5× faster on rotation-heavy queries (avg, weighted) due to native float support. BFV edges ahead on simple vector ops where no rotations are needed.</div>
     </div>
   </div>
 </div>
@@ -482,7 +495,7 @@ function pickQuery(btn, q) {
 }
 
 function showChart(c) {
-  var ids = ['upload','qtime','slow','err'];
+  var ids = ['upload','qtime','slow','err','bfv'];
   for (var i = 0; i < ids.length; i++) {
     document.getElementById('ct-' + ids[i]).classList.remove('active');
     document.getElementById('cp-' + ids[i]).classList.remove('active');
@@ -689,6 +702,71 @@ function buildCharts() {
     };})},
     options: baseOpts('|HE - PT|', true)
   });
+
+  var BC = """ + json.dumps(BENCH_COMPARE) + """;
+  var CKKS_MAP = {"Q1": "Q1_avg_burn_rate", "Q2": "Q2_avg_mental_fatigue", "Q3": "Q3_weighted_burn_risk", "Q4": "Q4_scaled_hours", "Q5": "Q5_stress_index"};
+  if (BC.length && BC[BC.length-1].bfv_queries) {
+    var r7k = BC[BC.length - 1];
+    var ks = Object.keys(r7k.bfv_queries);
+    var labels = ks.map(function(k){ return r7k.bfv_queries[k].label; });
+    var ckksReal = ks.map(function(k){ return r7k.queries[CKKS_MAP[k]].he_time_s; });
+    var bfvReal  = ks.map(function(k){ return r7k.bfv_queries[k].bfv_time_s; });
+    new Chart(document.getElementById('ch-bfv'), {
+      type: 'bar',
+      data: {labels: labels, datasets: [
+        {label: 'CKKS (TenSEAL)', data: ckksReal,
+         backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
+        {label: 'BFV (Pyfhel)',   data: bfvReal,
+         backgroundColor: 'rgba(192,57,90,0.15)', borderColor: '#C0395A', borderWidth: 1.5}
+      ]},
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {padding: {bottom: 30}},
+        plugins: {
+          legend: {labels: {color: '#cdd9f0', font: {family: 'IBM Plex Mono', size: 11}}},
+          tooltip: {
+            callbacks: {
+              title: function(items) { return items[0].label; },
+              label: function(item) {
+                var ct = ckksReal[item.dataIndex];
+                var bt = bfvReal[item.dataIndex];
+                if (item.datasetIndex === 0) return 'CKKS: ' + ct.toFixed(4) + 's';
+                return ['BFV:  ' + bt.toFixed(4) + 's', 'Ratio: ' + (bt/Math.max(ct,1e-9)).toFixed(1) + '× slower'];
+              }
+            },
+            backgroundColor: '#131826', borderColor: '#1c2436', borderWidth: 1,
+            titleColor: '#cdd9f0', bodyColor: '#6a8aaa', padding: 10, displayColors: true
+          }
+        },
+        scales: {
+          x: {grid: GC, ticks: TC},
+          y: {grid: GC, ticks: TC, type: 'linear',
+              title: {display: true, text: 'Query time (s)', color: '#6a8aaa',
+                      font: {family: 'IBM Plex Mono', size: 10}}}
+        }
+      },
+      plugins: [{
+        id: 'bfvLabels',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx;
+          var xAxis = chart.scales.x;
+          ctx.save();
+          ctx.font = '9px IBM Plex Mono';
+          ctx.textAlign = 'center';
+          for (var i = 0; i < ks.length; i++) {
+            var x = xAxis.getPixelForValue(i);
+            var y = chart.chartArea.bottom + 28;
+            ctx.fillStyle = '#00ffc8';
+            ctx.fillText('C:' + ckksReal[i].toFixed(3) + 's', x, y);
+            ctx.fillStyle = '#C0395A';
+            ctx.fillText('B:' + bfvReal[i].toFixed(3) + 's', x, y + 13);
+          }
+          ctx.restore();
+        }
+      }]
+    });
+  }
 }
 </script>
 </body>

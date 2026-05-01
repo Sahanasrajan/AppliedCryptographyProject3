@@ -103,6 +103,6 @@ ax[3].fill_between(ns, [1e-9]*len(ns), q1_err, color=ERR_COLOR, alpha=0.15)
 ax[3].annotate("All errors < 10⁻⁷\n(negligible for analytics)", xy=(500, max(q1_err)*0.6),
                color=ERR_COLOR, fontsize=9)
 
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.tight_layout(rect=(0, 0, 1, 0.96))
 plt.savefig(OUT_PATH, dpi=150, bbox_inches="tight", facecolor=BG)
 print(f"[✓] Plot saved → {OUT_PATH}")

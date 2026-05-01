@@ -86,8 +86,6 @@ def run_at_size(n: int, df_full: pd.DataFrame) -> dict:
     print(f"  Q2 avg fatigue    | HE={he_val:.4f}  PT={pt_val:.4f}  err={abs(he_val-pt_val):.2e}  HE_t={he_t:.3f}s")
 
     # Q3: weighted burn-risk score (dot product)
-    w = WEIGHTS_BURN_RISK[:n] if n < len(WEIGHTS_BURN_RISK) else WEIGHTS_BURN_RISK
-    # pad/truncate weights to n
     w_full = [WEIGHTS_BURN_RISK[i % len(WEIGHTS_BURN_RISK)] for i in range(n)]
     he_val, he_t = he.query_weighted_sum("burn_rate", w_full)
     pt_val, pt_t = pt.query_weighted_sum("burn_rate", w_full)
@@ -131,6 +129,133 @@ def run_at_size(n: int, df_full: pd.DataFrame) -> dict:
 
 
 # ─────────────────────────────────────────────
+# Step 4b: BFV comparison
+# ─────────────────────────────────────────────
+
+import copy
+from Pyfhel import Pyfhel, PyCtxt
+
+_SCALE        = 10_000
+_WEIGHT_SCALE = 100
+_N_POLY       = 8192
+_T_BITS       = 36
+_MAX_SLOTS    = _N_POLY // 2
+
+def _bfv_setup():
+    HE = Pyfhel()
+    HE.contextGen(scheme='bfv', n=_N_POLY, t_bits=_T_BITS, sec=128)
+    HE.keyGen(); HE.relinKeyGen(); HE.rotateKeyGen()
+    return HE
+
+def _bfv_encrypt_col(HE, values):
+    int_vals = np.round(values.astype(float) * _SCALE).astype(np.int64)
+    chunks = []
+    for i in range(0, len(int_vals), _MAX_SLOTS):
+        chunk = int_vals[i:i + _MAX_SLOTS]
+        padded = np.zeros(_MAX_SLOTS, dtype=np.int64)
+        padded[:len(chunk)] = chunk
+        chunks.append(HE.encryptInt(padded).to_bytes())
+    return chunks
+
+def _bfv_tree_sum(HE, ct, n):
+    acc = copy.deepcopy(ct)
+    step = 1
+    while step < n:
+        acc = acc + HE.rotate(copy.deepcopy(acc), step)
+        step *= 2
+    return acc
+
+def _bfv_avg(HE, chunks, n):
+    sizes = [min(_MAX_SLOTS, n - i * _MAX_SLOTS) for i in range(len(chunks))]
+    total = None
+    for ct_bytes, size in zip(chunks, sizes):
+        ct = PyCtxt(pyfhel=HE, bytestring=ct_bytes)
+        s = _bfv_tree_sum(HE, ct, size)
+        total = s if total is None else total + s
+    return HE.decryptInt(total)[0] / _SCALE / n
+
+def _bfv_weighted(HE, chunks, n, weights):
+    sizes = [min(_MAX_SLOTS, n - i * _MAX_SLOTS) for i in range(len(chunks))]
+    total = None; offset = 0
+    for ct_bytes, size in zip(chunks, sizes):
+        ct = PyCtxt(pyfhel=HE, bytestring=ct_bytes)
+        w = np.zeros(_MAX_SLOTS, dtype=np.int64)
+        w[:size] = np.round([weights[(offset+i) % len(weights)] * _WEIGHT_SCALE
+                             for i in range(size)]).astype(np.int64)
+        s = _bfv_tree_sum(HE, ct * HE.encodeInt(w), size)
+        total = s if total is None else total + s
+        offset += size
+    return HE.decryptInt(total)[0] / _SCALE / _WEIGHT_SCALE
+
+def _bfv_scale(HE, chunks, n, scalar):
+    sizes = [min(_MAX_SLOTS, n - i * _MAX_SLOTS) for i in range(len(chunks))]
+    result = []
+    for ct_bytes, size in zip(chunks, sizes):
+        ct = PyCtxt(pyfhel=HE, bytestring=ct_bytes)
+        pt = HE.encodeInt(np.full(_MAX_SLOTS, int(round(scalar * _SCALE)), dtype=np.int64))
+        result.extend(float(v) / _SCALE / _SCALE for v in HE.decryptInt(ct * pt)[:size])
+    return result
+
+def _bfv_add(HE, chunks_a, chunks_b, n):
+    sizes = [min(_MAX_SLOTS, n - i * _MAX_SLOTS) for i in range(len(chunks_a))]
+    result = []
+    for a_bytes, b_bytes, size in zip(chunks_a, chunks_b, sizes):
+        result.extend(float(v) / _SCALE for v in
+                      HE.decryptInt(PyCtxt(pyfhel=HE, bytestring=a_bytes) +
+                                    PyCtxt(pyfhel=HE, bytestring=b_bytes))[:size])
+    return result
+
+def run_bfv_at_size(n: int, df_full: pd.DataFrame) -> dict:
+    """Run BFV queries at size n, return results dict to merge into main results."""
+    df = df_full.head(n).copy()
+    w_full = [WEIGHTS_BURN_RISK[i % len(WEIGHTS_BURN_RISK)] for i in range(n)]
+
+    HE = _bfv_setup()
+    t0 = time.time()
+    cols = {col: _bfv_encrypt_col(HE, df[col].values) for col in NUMERIC_COLS}
+    upload_bfv = time.time() - t0
+    print(f"  [BFV] Upload: {upload_bfv:.3f}s")
+
+    pt = PlaintextQuerySystem()
+    pt.upload_dataset(df, NUMERIC_COLS)
+
+    bfv_queries = {}
+    for qid, label, fn_bfv, fn_pt in [
+        ("Q1", "avg burn_rate",
+            lambda: _bfv_avg(HE, cols["burn_rate"], n),
+            lambda: pt.query_average("burn_rate")[0]),
+        ("Q2", "avg mental_fatigue",
+            lambda: _bfv_avg(HE, cols["mental_fatigue_score"], n),
+            lambda: pt.query_average("mental_fatigue_score")[0]),
+        ("Q3", "weighted burn_rate",
+            lambda: _bfv_weighted(HE, cols["burn_rate"], n, w_full),
+            lambda: pt.query_weighted_sum("burn_rate", w_full)[0]),
+        ("Q4", "scaled hours",
+            lambda: _bfv_scale(HE, cols["hours_per_week"], n, 1/40),
+            lambda: pt.query_scaled_column("hours_per_week", 1/40)[0]),
+        ("Q5", "stress index",
+            lambda: _bfv_add(HE, cols["mental_fatigue_score"],
+                             cols["resource_allocation"], n),
+            lambda: pt.query_column_sum_two("mental_fatigue_score", "resource_allocation")[0]),
+    ]:
+        t0 = time.time(); bfv_val = fn_bfv(); bfv_t = time.time() - t0
+        pt_val = fn_pt()
+
+        if isinstance(bfv_val, list):
+            err = max(abs(a-b) for a,b in zip(bfv_val[:10], pt_val[:10])) if isinstance(pt_val, list) else 0
+            result = round(bfv_val[0], 4)
+        else:
+            err = abs(bfv_val - (pt_val[0] if isinstance(pt_val, list) else pt_val))
+            result = round(float(bfv_val), 6)
+
+        bfv_queries[qid] = {"label": label, "bfv_result": result,
+                             "bfv_time_s": round(bfv_t, 4), "bfv_abs_error": round(err, 10)}
+        print(f"  [BFV] {qid} {label:20s} | t={bfv_t:.3f}s  err={err:.2e}")
+
+    return {"upload_bfv_s": round(upload_bfv, 4), "bfv_queries": bfv_queries}
+
+
+# ─────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────
 
@@ -149,6 +274,13 @@ if __name__ == "__main__":
     for n in SIZES:
         r = run_at_size(n, df_full)
         all_results.append(r)
+
+    # Step 4b: BFV comparison —> merge into existing results
+    print("\n\n── Step 4b: BFV Comparison ─────────────────────────────────")
+    for r in all_results:
+        bfv = run_bfv_at_size(r["n"], df_full)
+        r["upload_bfv_s"] = bfv["upload_bfv_s"]
+        r["bfv_queries"]  = bfv["bfv_queries"]
 
     # Save JSON results
     out_json = os.path.join(os.path.dirname(__file__), "benchmark_results.json")
