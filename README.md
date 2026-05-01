@@ -100,6 +100,11 @@ AppliedCryptographyProject3/
 ```bash
 pip install tenseal pandas numpy matplotlib flask
 ```
+#### a. Install dependencies
+- Python version matters (Link for python 3.12: https://www.python.org/downloads/release/python-31210/)
+```bash
+py -3.12 -m pip install -r requirements.txt
+```
 
 ### 2. Launch the interactive web app (recommended)
 ```bash
