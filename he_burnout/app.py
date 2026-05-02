@@ -50,7 +50,7 @@ HTML = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HE Burnout App</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +62,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 .wrap { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:24px 20px; }
 
 .topbar { display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid #1c2436; }
-.logo { font-family:'Syne',sans-serif; font-size:1.4rem; color:#00ffc8; text-shadow:0 0 24px rgba(0,255,200,0.3); }
+.logo { font-family:'Inter',sans-serif; font-size:1.4rem; color:#00ffc8; text-shadow:0 0 24px rgba(0,255,200,0.3); }
 .logo small { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#6a8aaa; display:block; margin-top:3px; font-weight:400; }
 .badge { font-size:0.6rem; padding:5px 12px; border:1px solid #00ffc8; border-radius:20px; color:#00ffc8; }
 
@@ -73,7 +73,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 
-.pipe { display:flex; align-items:center; background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:12px 14px; margin-bottom:18px; overflow-x:auto; gap:0; }
+.pipe { display:flex; align-items:center; background:#0c0f1a; border:1px solid #1c2436; border-radius:8px; padding:12px 14px; overflow-x:auto; gap:0; }
 .pstep { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:80px; text-align:center; font-size:0.62rem; color:#3a4a60; padding:6px; border-radius:7px; }
 .pstep.active { color:#00ffc8; background:rgba(0,255,200,0.05); }
 .pnum { width:22px; height:22px; border-radius:50%; border:1px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.6rem; }
@@ -82,18 +82,21 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 
 .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
 .card { background:#131826; border:1px solid #1c2436; border-radius:10px; padding:16px; }
-.card-label { font-size:0.58rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+.card-header { margin-bottom:12px; }
+.card-step { display:inline-block; font-size:0.55rem; color:#00ffc8; letter-spacing:0.15em; text-transform:uppercase; background:rgba(0,255,200,0.08); border:1px solid rgba(0,255,200,0.2); border-radius:4px; padding:2px 9px; margin-bottom:6px; }
+.card-label { font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:800; color:#cdd9f0; letter-spacing:0; margin-bottom:0; }
 .btn-row { display:flex; flex-wrap:wrap; gap:6px; }
 .sel-btn { padding:6px 12px; border:1px solid #1c2436; border-radius:5px; background:#111520; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
 .sel-btn:hover { border-color:#6a8aaa; color:#cdd9f0; }
 .sel-btn.active { border-color:#00ffc8; background:rgba(0,255,200,0.08); color:#00ffc8; }
 
-.run-wrap { text-align:center; margin-bottom:16px; }
-.run-btn { padding:12px 40px; background:#00ffc8; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
+.run-section { background:#131826; border:1px solid #1c2436; border-radius:10px; padding:16px; margin-bottom:14px; }
+.run-section-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.run-btn { padding:10px 32px; background:#00ffc8; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
 .run-btn:hover { opacity:0.88; transform:translateY(-1px); }
 .run-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
-.log-box { background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:14px; margin-bottom:14px; font-size:0.65rem; line-height:2; }
+.log-box { background:#0c0f1a; border:1px solid #1c2436; border-radius:8px; padding:14px; font-size:0.65rem; line-height:2; }
 .log-label { font-size:0.55rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
 .log-row { display:flex; gap:8px; }
 .log-t { color:#3a4a60; min-width:50px; }
@@ -167,7 +170,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 .chart-panel { display:none; }
 .chart-panel.active { display:block; }
 .chart-card { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:14px; }
-.chart-title { font-family:'Syne',sans-serif; font-size:0.9rem; color:#cdd9f0; margin-bottom:4px; }
+.chart-title { font-family:'Inter',sans-serif; font-size:0.9rem; color:#cdd9f0; margin-bottom:4px; }
 .chart-sub { font-size:0.62rem; color:#6a8aaa; margin-bottom:16px; line-height:1.6; }
 .chart-wrap { position:relative; height:280px; }
 .chart-wrap-tall { position:relative; height:320px; }
@@ -206,7 +209,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
   border-radius:20px; display:inline-block; padding:4px 14px; margin-bottom:18px;
 }
 .modal-title {
-  font-family:'Syne',sans-serif; font-size:1.5rem; color:#00ffc8;
+  font-family:'Inter',sans-serif; font-size:1.5rem; color:#00ffc8;
   text-shadow:0 0 24px rgba(0,255,200,0.3); line-height:1.2; margin-bottom:6px;
 }
 .modal-subtitle { font-size:0.68rem; color:#6a8aaa; margin-bottom:22px; }
@@ -318,23 +321,12 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 <!-- QUERY TAB -->
 <div class="tab-panel active" id="panel-query">
 
-  <div class="pipe">
-    <div class="pstep active" id="ps-1"><div class="pnum">1</div><div>Alice<br>Keygen</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-2"><div class="pnum">2</div><div>Alice<br>Encrypt</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-3"><div class="pnum">3</div><div>Carol<br>Receives</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-4"><div class="pnum">4</div><div>Carol<br>Evaluates</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-5"><div class="pnum">5</div><div>Alice<br>Decrypts</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-6"><div class="pnum">✓</div><div>Result<br>Out</div></div>
-  </div>
-
   <div class="grid2">
     <div class="card">
-      <div class="card-label">① Select Dataset Size</div>
+      <div class="card-header">
+        <div class="card-step">Step 01</div>
+        <div class="card-label">Select Dataset Size</div>
+      </div>
       <div class="btn-row" id="size-group">
         <button class="sel-btn" onclick="pickSize(this,100)">N = 100</button>
         <button class="sel-btn active" onclick="pickSize(this,500)">N = 500</button>
@@ -344,7 +336,10 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
       </div>
     </div>
     <div class="card">
-      <div class="card-label">② Select Query (Carol evaluates on ciphertext)</div>
+      <div class="card-header">
+        <div class="card-step">Step 02</div>
+        <div class="card-label">Select Query</div>
+      </div>
       <div class="btn-row" id="query-group">
         <button class="sel-btn active" onclick="pickQuery(this,'avg_burn_rate')">avg(burn_rate)</button>
         <button class="sel-btn" onclick="pickQuery(this,'avg_fatigue')">avg(fatigue)</button>
@@ -357,14 +352,34 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
     </div>
   </div>
 
-  <div class="run-wrap">
-    <button class="run-btn" id="run-btn" onclick="runQuery()">▶  Run Encrypted Query</button>
-  </div>
+  <div class="run-section">
+    <div class="run-section-top">
+      <div class="card-header" style="margin-bottom:0;">
+        <div class="card-step">Step 03</div>
+        <div class="card-label">Run Encrypted Query</div>
+      </div>
+      <button class="run-btn" id="run-btn" onclick="runQuery()">▶  Run Encrypted Query</button>
+    </div>
 
-  <div class="log-box">
-    <div class="log-label">Execution Log</div>
-    <div id="log-lines">
-      <div class="log-row"><span class="log-t">ready</span><span>Select a query and click Run ↑</span></div>
+    <div class="pipe" style="margin-bottom:12px;">
+      <div class="pstep active" id="ps-1"><div class="pnum">1</div><div>Alice<br>Keygen</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-2"><div class="pnum">2</div><div>Alice<br>Encrypt</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-3"><div class="pnum">3</div><div>Carol<br>Receives</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-4"><div class="pnum">4</div><div>Carol<br>Evaluates</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-5"><div class="pnum">5</div><div>Alice<br>Decrypts</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-6"><div class="pnum">✓</div><div>Result<br>Out</div></div>
+    </div>
+
+    <div class="log-box">
+      <div class="log-label">Execution Log</div>
+      <div id="log-lines">
+        <div class="log-row"><span class="log-t">ready</span><span>Select a query and click Run ↑</span></div>
+      </div>
     </div>
   </div>
 
@@ -952,4 +967,4 @@ def run_query():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=True)
