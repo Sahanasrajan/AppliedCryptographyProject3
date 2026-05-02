@@ -174,9 +174,135 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .insight { background:#0c0f1a; border-left:2px solid #00ffc8; border-radius:0 6px 6px 0; padding:10px 13px; margin-top:12px; font-size:0.63rem; color:#6a8aaa; line-height:1.6; }
 .insight strong { color:#00ffc8; }
+
+/* ── INTRO MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  animation:fadeInOverlay 0.3s ease;
+}
+.modal-overlay.hide { animation:fadeOutOverlay 0.25s ease forwards; }
+@keyframes fadeInOverlay  { from{opacity:0} to{opacity:1} }
+@keyframes fadeOutOverlay { from{opacity:1} to{opacity:0} }
+
+.modal-box {
+  background:#0c0f1a;
+  border:1px solid #00ffc8;
+  border-radius:14px;
+  max-width:680px; width:100%;
+  padding:32px 36px;
+  box-shadow:0 0 60px rgba(0,255,200,0.12);
+  position:relative;
+  animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.modal-tag {
+  font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:#00ffc8; border:1px solid rgba(0,255,200,0.35);
+  border-radius:20px; display:inline-block; padding:4px 14px; margin-bottom:18px;
+}
+.modal-title {
+  font-family:'Syne',sans-serif; font-size:1.5rem; color:#00ffc8;
+  text-shadow:0 0 24px rgba(0,255,200,0.3); line-height:1.2; margin-bottom:6px;
+}
+.modal-subtitle { font-size:0.68rem; color:#6a8aaa; margin-bottom:22px; }
+
+.modal-section { margin-bottom:18px; }
+.modal-section-label {
+  font-size:0.57rem; text-transform:uppercase; letter-spacing:0.12em;
+  color:#00ffc8; opacity:0.7; margin-bottom:8px;
+}
+.modal-section-body {
+  font-size:0.68rem; color:#8a9ab8; line-height:1.85;
+}
+.modal-section-body strong { color:#cdd9f0; }
+
+.modal-divider { border:none; border-top:1px solid #1c2436; margin:20px 0; }
+
+.modal-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px; }
+.modal-col {
+  background:#131826; border:1px solid #1c2436; border-radius:9px; padding:14px 16px;
+}
+.modal-col-label { font-size:0.57rem; text-transform:uppercase; letter-spacing:0.1em; color:#6a8aaa; margin-bottom:6px; }
+.modal-col-val { font-size:0.72rem; color:#cdd9f0; line-height:1.7; }
+.modal-col-val span { color:#00ffc8; }
+
+.modal-close-row { text-align:center; }
+.modal-close-btn {
+  padding:12px 48px; background:#00ffc8; color:#000; border:none;
+  border-radius:7px; font-family:'IBM Plex Mono',monospace;
+  font-size:0.78rem; font-weight:600; cursor:pointer; letter-spacing:0.04em;
+}
+.modal-close-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.modal-skip {
+  display:block; margin-top:10px; font-size:0.58rem; color:#3a4a60; cursor:pointer;
+  background:none; border:none; font-family:'IBM Plex Mono',monospace;
+}
+.modal-skip:hover { color:#6a8aaa; }
 </style>
 </head>
 <body>
+
+<!-- INTRO MODAL -->
+<div class="modal-overlay" id="intro-modal">
+  <div class="modal-box">
+    <div class="modal-tag">CS6903 / 4783 · Project 3 · NYU</div>
+    <div class="modal-title">HE Burnout Explorer</div>
+    <div class="modal-subtitle">Homomorphic Encryption over Outsourced Data · CKKS scheme via TenSEAL</div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">What is this?</div>
+      <div class="modal-section-body">
+        This app demonstrates <strong>Homomorphic Encryption (HE)</strong> — a cryptographic technique
+        that lets a third party (<strong>Carol</strong>) compute queries on data she <em>never decrypts</em>.
+        Alice encrypts a developer burnout dataset using the <strong>CKKS scheme</strong>, sends only
+        ciphertexts to Carol, and Carol returns encrypted results that only Alice can decrypt.
+        The data stays private end-to-end.
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">The Dataset</div>
+      <div class="modal-section-body">
+        <strong>Developer Burnout Dataset</strong> — 7,000 synthetic records modeled on the
+        Kaggle employee burnout dataset. Each row represents one developer with fields for
+        designation, resource allocation, mental fatigue score, hours per week, years of
+        experience, team size, and burn rate (0–1 scale).
+      </div>
+    </div>
+
+    <hr class="modal-divider">
+
+    <div class="modal-cols">
+      <div class="modal-col">
+        <div class="modal-col-label">HE Scheme</div>
+        <div class="modal-col-val">
+          <span>CKKS</span> — approximate arithmetic<br>
+          poly_degree = <span>8192</span><br>
+          security = <span>128-bit</span> (RLWE)
+        </div>
+      </div>
+      <div class="modal-col">
+        <div class="modal-col-label">What you can do</div>
+        <div class="modal-col-val">
+          Run <span>5 query types</span> on ciphertext<br>
+          Compare HE vs plaintext speed<br>
+          Inspect <span>CKKS error</span> (≤ 10⁻⁷)
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-close-row">
+      <button class="modal-close-btn" onclick="closeModal()">▶  Start Exploring</button>
+      <button class="modal-skip" onclick="closeModal(true)">don't show again</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
 <div class="topbar">
@@ -449,6 +575,19 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 </div>
 
 <script>
+(function() {
+  if (localStorage.getItem('he_intro_seen')) {
+    document.getElementById('intro-modal').style.display = 'none';
+  }
+})();
+
+function closeModal(permanent) {
+  var el = document.getElementById('intro-modal');
+  el.classList.add('hide');
+  if (permanent) localStorage.setItem('he_intro_seen', '1');
+  setTimeout(function() { el.style.display = 'none'; }, 260);
+}
+
 var selN = 500;
 var selQ = 'avg_burn_rate';
 var queryHistory = [];
