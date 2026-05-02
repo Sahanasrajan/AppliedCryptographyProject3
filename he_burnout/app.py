@@ -54,129 +54,130 @@ HTML = """<!DOCTYPE html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #07090f; color: #cdd9f0; font-family: 'IBM Plex Mono', monospace; }
+body { background: #0f1117; color: #dce4f2; font-family: 'IBM Plex Mono', monospace; }
 body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image: linear-gradient(rgba(0,255,200,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,200,0.025) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(96,184,212,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96,184,212,0.025) 1px, transparent 1px);
   background-size: 44px 44px; }
 .wrap { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:24px 20px; }
 
-.topbar { display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid #1c2436; }
-.logo { font-family:'Inter',sans-serif; font-size:1.4rem; color:#00ffc8; text-shadow:0 0 24px rgba(0,255,200,0.3); }
-.logo small { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#6a8aaa; display:block; margin-top:3px; font-weight:400; }
-.badge { font-size:0.6rem; padding:5px 12px; border:1px solid #00ffc8; border-radius:20px; color:#00ffc8; }
+.topbar { display:flex; flex-direction:column; gap:16px; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid #252d3d; }
+.topbar-top { display:flex; justify-content:space-between; align-items:center; }
+.logo { font-family:'Inter',sans-serif; font-size:1.4rem; color:#60b8d4; text-shadow:none; }
+.logo small { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#8a9ab8; display:block; margin-top:3px; font-weight:400; }
+.badge { font-size:0.6rem; padding:5px 12px; border:1px solid #60b8d4; border-radius:20px; color:#60b8d4; }
 
-.tab-bar { display:flex; gap:6px; margin-bottom:22px; }
-.tab-btn { padding:9px 22px; border-radius:7px; border:1px solid #1c2436; background:#0c0f1a; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; cursor:pointer; }
-.tab-btn.active { border-color:#00ffc8; background:rgba(0,255,200,0.08); color:#00ffc8; }
+.tab-bar { display:flex; gap:6px; }
+.tab-btn { padding:9px 22px; border-radius:7px; border:1px solid #252d3d; background:#12151e; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; cursor:pointer; }
+.tab-btn.active { border-color:#60b8d4; background:rgba(96,184,212,0.08); color:#60b8d4; }
 
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 
-.pipe { display:flex; align-items:center; background:#0c0f1a; border:1px solid #1c2436; border-radius:8px; padding:12px 14px; overflow-x:auto; gap:0; }
-.pstep { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:80px; text-align:center; font-size:0.62rem; color:#3a4a60; padding:6px; border-radius:7px; }
-.pstep.active { color:#00ffc8; background:rgba(0,255,200,0.05); }
+.pipe { display:flex; align-items:center; background:#12151e; border:1px solid #252d3d; border-radius:8px; padding:12px 14px; overflow-x:auto; gap:0; }
+.pstep { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:80px; text-align:center; font-size:0.62rem; color:#4e5f7a; padding:6px; border-radius:7px; }
+.pstep.active { color:#60b8d4; background:rgba(96,184,212,0.05); }
 .pnum { width:22px; height:22px; border-radius:50%; border:1px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.6rem; }
-.pstep.active .pnum { background:#00ffc8; color:#000; }
-.parr { color:#3a4a60; padding:0 3px; flex-shrink:0; }
+.pstep.active .pnum { background:#60b8d4; color:#000; }
+.parr { color:#4e5f7a; padding:0 3px; flex-shrink:0; }
 
 .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-.card { background:#131826; border:1px solid #1c2436; border-radius:10px; padding:16px; }
+.card { background:#161b24; border:1px solid #252d3d; border-radius:10px; padding:16px; }
 .card-header { margin-bottom:12px; }
-.card-step { display:inline-block; font-size:0.55rem; color:#00ffc8; letter-spacing:0.15em; text-transform:uppercase; background:rgba(0,255,200,0.08); border:1px solid rgba(0,255,200,0.2); border-radius:4px; padding:2px 9px; margin-bottom:6px; }
-.card-label { font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:800; color:#cdd9f0; letter-spacing:0; margin-bottom:0; }
+.card-step { display:inline-block; font-size:0.55rem; color:#60b8d4; letter-spacing:0.15em; text-transform:uppercase; background:rgba(96,184,212,0.08); border:1px solid rgba(96,184,212,0.2); border-radius:4px; padding:2px 9px; margin-bottom:6px; }
+.card-label { font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:800; color:#dce4f2; letter-spacing:0; margin-bottom:0; }
 .btn-row { display:flex; flex-wrap:wrap; gap:6px; }
-.sel-btn { padding:6px 12px; border:1px solid #1c2436; border-radius:5px; background:#111520; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
-.sel-btn:hover { border-color:#6a8aaa; color:#cdd9f0; }
-.sel-btn.active { border-color:#00ffc8; background:rgba(0,255,200,0.08); color:#00ffc8; }
+.sel-btn { padding:6px 12px; border:1px solid #252d3d; border-radius:5px; background:#13172a; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
+.sel-btn:hover { border-color:#8a9ab8; color:#dce4f2; }
+.sel-btn.active { border-color:#60b8d4; background:rgba(96,184,212,0.08); color:#60b8d4; }
 
-.run-section { background:#131826; border:1px solid #1c2436; border-radius:10px; padding:16px; margin-bottom:14px; }
+.run-section { background:#161b24; border:1px solid #252d3d; border-radius:10px; padding:16px; margin-bottom:14px; }
 .run-section-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-.run-btn { padding:10px 32px; background:#00ffc8; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
+.run-btn { padding:10px 32px; background:#60b8d4; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
 .run-btn:hover { opacity:0.88; transform:translateY(-1px); }
 .run-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
-.log-box { background:#0c0f1a; border:1px solid #1c2436; border-radius:8px; padding:14px; font-size:0.65rem; line-height:2; }
-.log-label { font-size:0.55rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+.log-box { background:#12151e; border:1px solid #252d3d; border-radius:8px; padding:14px; font-size:0.65rem; line-height:2; }
+.log-label { font-size:0.55rem; color:#8a9ab8; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
 .log-row { display:flex; gap:8px; }
-.log-t { color:#3a4a60; min-width:50px; }
-.log-alice { color:#00ffc8; }
-.log-carol { color:#a78bfa; }
-.log-done { color:#ffe246; font-weight:600; }
+.log-t { color:#7a8da8; min-width:50px; }
+.log-alice { color:#60b8d4; }
+.log-carol { color:#9d85e8; }
+.log-done { color:#f5b942; font-weight:600; }
 
-.result-box { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:16px; display:none; }
+.result-box { background:#161b24; border:1px solid #252d3d; border-radius:12px; padding:20px; margin-bottom:16px; display:none; }
 .result-box.show { display:block; }
-.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid #1c2436; }
-.res-title { font-size:0.65rem; color:#6a8aaa; }
-.res-title strong { display:block; font-size:0.85rem; color:#cdd9f0; margin-top:2px; }
-.res-tag { font-size:0.58rem; padding:3px 10px; background:rgba(0,255,200,0.08); border:1px solid rgba(0,255,200,0.25); border-radius:4px; color:#00ffc8; }
+.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid #252d3d; }
+.res-title { font-size:0.65rem; color:#a0afc8; }
+.res-title strong { display:block; font-size:0.85rem; color:#dce4f2; margin-top:2px; }
+.res-tag { font-size:0.58rem; padding:3px 10px; background:rgba(96,184,212,0.08); border:1px solid rgba(96,184,212,0.25); border-radius:4px; color:#60b8d4; }
 
 .res-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-.res-cell { border-radius:10px; padding:16px; border:1px solid #1c2436; }
-.res-cell.he { border-color:rgba(0,255,200,0.2); background:rgba(0,255,200,0.03); }
-.res-cell.pt { border-color:rgba(255,112,67,0.2); background:rgba(255,112,67,0.03); }
-.res-cell-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; font-weight:600; }
-.res-cell.he .res-cell-label { color:#00ffc8; }
-.res-cell.pt .res-cell-label { color:#ff7043; }
-.res-cell-how { font-size:0.6rem; color:#3a4a60; margin-bottom:10px; line-height:1.5; border-left:2px solid #1c2436; padding-left:8px; }
-.res-cell.he .res-cell-how { border-color:rgba(0,255,200,0.2); }
-.res-cell.pt .res-cell-how { border-color:rgba(255,112,67,0.2); }
+.res-cell { border-radius:10px; padding:16px; border:1px solid #252d3d; }
+.res-cell.he { border-color:rgba(96,184,212,0.2); background:rgba(96,184,212,0.03); }
+.res-cell.pt { border-color:rgba(232,117,79,0.2); background:rgba(232,117,79,0.03); }
+.res-cell-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; font-weight:600; }
+.res-cell.he .res-cell-label { color:#60b8d4; }
+.res-cell.pt .res-cell-label { color:#e8754f; }
+.res-cell-how { font-size:0.65rem; color:#8a9ab8; margin-bottom:10px; line-height:1.6; border-left:2px solid #252d3d; padding-left:8px; }
+.res-cell.he .res-cell-how { border-color:rgba(96,184,212,0.2); }
+.res-cell.pt .res-cell-how { border-color:rgba(232,117,79,0.2); }
 .res-val { font-size:1.5rem; font-weight:600; line-height:1; margin-bottom:10px; }
-.res-cell.he .res-val { color:#00ffc8; }
-.res-cell.pt .res-val { color:#ff7043; }
+.res-cell.he .res-val { color:#60b8d4; }
+.res-cell.pt .res-val { color:#e8754f; }
 .res-meta { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
-.res-meta-item { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 10px; }
-.res-meta-item .rmi-label { font-size:0.52rem; color:#3a4a60; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
-.res-meta-item .rmi-val { font-size:0.72rem; color:#6a8aaa; }
-.res-cell.he .rmi-val { color:#00ffc8; }
-.res-cell.pt .rmi-val { color:#ff7043; }
+.res-meta-item { background:#12151e; border:1px solid #252d3d; border-radius:5px; padding:6px 10px; }
+.res-meta-item .rmi-label { font-size:0.58rem; color:#7a8da8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
+.res-meta-item .rmi-val { font-size:0.72rem; color:#b0bdd4; }
+.res-cell.he .rmi-val { color:#60b8d4; }
+.res-cell.pt .rmi-val { color:#e8754f; }
 
 .info-sections { display:flex; flex-direction:column; gap:10px; }
 .info-section { border-radius:8px; padding:14px 16px; border:1px solid; }
-.info-section.err-section { background:rgba(255,226,70,0.04); border-color:rgba(255,226,70,0.2); }
-.info-section.slow-section { background:rgba(255,112,67,0.04); border-color:rgba(255,112,67,0.15); }
-.info-section.match-section { background:rgba(0,255,200,0.03); border-color:rgba(0,255,200,0.15); }
+.info-section.err-section { background:rgba(245,185,66,0.04); border-color:rgba(245,185,66,0.2); }
+.info-section.slow-section { background:rgba(232,117,79,0.04); border-color:rgba(232,117,79,0.15); }
+.info-section.match-section { background:rgba(96,184,212,0.03); border-color:rgba(96,184,212,0.15); }
 .info-section-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
-.info-section-title { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
-.err-section .info-section-title { color:#ffe246; }
-.slow-section .info-section-title { color:#ff7043; }
-.match-section .info-section-title { color:#00ffc8; }
+.info-section-title { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
+.err-section .info-section-title { color:#f5b942; }
+.slow-section .info-section-title { color:#e8754f; }
+.match-section .info-section-title { color:#60b8d4; }
 .info-big-val { font-size:1.3rem; font-weight:600; }
-.err-section .info-big-val { color:#ffe246; }
-.slow-section .info-big-val { color:#ff7043; }
-.match-section .info-big-val { color:#00ffc8; }
-.info-section-body { font-size:0.62rem; color:#6a8aaa; line-height:1.7; }
-.info-section-body strong { color:#cdd9f0; }
-.info-formula { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 12px; font-size:0.62rem; color:#a78bfa; margin-top:8px; font-family:'IBM Plex Mono',monospace; }
-.match-pill { display:inline-block; background:rgba(0,255,200,0.1); border:1px solid rgba(0,255,200,0.3); border-radius:4px; color:#00ffc8; padding:1px 8px; font-size:0.6rem; margin-left:6px; }
+.err-section .info-big-val { color:#f5b942; }
+.slow-section .info-big-val { color:#e8754f; }
+.match-section .info-big-val { color:#60b8d4; }
+.info-section-body { font-size:0.68rem; color:#a0afc8; line-height:1.75; }
+.info-section-body strong { color:#dce4f2; }
+.info-formula { background:#12151e; border:1px solid #252d3d; border-radius:5px; padding:6px 12px; font-size:0.62rem; color:#9d85e8; margin-top:8px; font-family:'IBM Plex Mono',monospace; }
+.match-pill { display:inline-block; background:rgba(96,184,212,0.1); border:1px solid rgba(96,184,212,0.3); border-radius:4px; color:#60b8d4; padding:1px 8px; font-size:0.6rem; margin-left:6px; }
 
-.hist-box { background:#131826; border:1px solid #1c2436; border-radius:10px; overflow:hidden; }
-.hist-head { padding:10px 14px; border-bottom:1px solid #1c2436; font-size:0.58rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; display:flex; justify-content:space-between; align-items:center; }
-.hist-clear { background:none; border:1px solid #1c2436; color:#3a4a60; font-family:'IBM Plex Mono',monospace; font-size:0.58rem; padding:2px 8px; border-radius:3px; cursor:pointer; }
-.hist-empty { padding:18px; text-align:center; color:#3a4a60; font-size:0.65rem; }
+.hist-box { background:#161b24; border:1px solid #252d3d; border-radius:10px; overflow:hidden; }
+.hist-head { padding:10px 14px; border-bottom:1px solid #252d3d; font-size:0.58rem; color:#8a9ab8; text-transform:uppercase; letter-spacing:0.1em; display:flex; justify-content:space-between; align-items:center; }
+.hist-clear { background:none; border:1px solid #252d3d; color:#4e5f7a; font-family:'IBM Plex Mono',monospace; font-size:0.58rem; padding:2px 8px; border-radius:3px; cursor:pointer; }
+.hist-empty { padding:18px; text-align:center; color:#4e5f7a; font-size:0.65rem; }
 .htable { width:100%; border-collapse:collapse; font-size:0.65rem; }
-.htable th { background:#111520; color:#6a8aaa; padding:8px 12px; text-align:left; font-size:0.58rem; text-transform:uppercase; border-bottom:1px solid #1c2436; }
+.htable th { background:#13172a; color:#8a9ab8; padding:8px 12px; text-align:left; font-size:0.58rem; text-transform:uppercase; border-bottom:1px solid #252d3d; }
 .htable td { padding:8px 12px; border-bottom:1px solid rgba(28,36,54,0.6); }
 .htable tr:last-child td { border-bottom:none; }
-.c-he { color:#00ffc8; } .c-pt { color:#ff7043; } .c-err { color:#ffe246; }
-.slow-pill { background:rgba(255,112,67,0.1); border:1px solid rgba(255,112,67,0.25); color:#ff7043; border-radius:3px; padding:1px 6px; font-size:0.58rem; }
+.c-he { color:#60b8d4; } .c-pt { color:#e8754f; } .c-err { color:#f5b942; }
+.slow-pill { background:rgba(232,117,79,0.1); border:1px solid rgba(232,117,79,0.25); color:#e8754f; border-radius:3px; padding:1px 6px; font-size:0.58rem; }
 
-.chart-intro { background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:0.68rem; color:#6a8aaa; line-height:1.7; }
-.chart-intro strong { color:#00ffc8; }
+.chart-intro { background:#12151e; border:1px solid #252d3d; border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:0.68rem; color:#8a9ab8; line-height:1.7; }
+.chart-intro strong { color:#60b8d4; }
 .chart-tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
-.chart-tab { padding:7px 14px; border:1px solid #1c2436; border-radius:5px; background:#111520; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
-.chart-tab:hover { border-color:#6a8aaa; color:#cdd9f0; }
-.chart-tab.active { border-color:#00ffc8; background:rgba(0,255,200,0.07); color:#00ffc8; }
+.chart-tab { padding:7px 14px; border:1px solid #252d3d; border-radius:5px; background:#13172a; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
+.chart-tab:hover { border-color:#8a9ab8; color:#dce4f2; }
+.chart-tab.active { border-color:#60b8d4; background:rgba(96,184,212,0.07); color:#60b8d4; }
 .chart-panel { display:none; }
 .chart-panel.active { display:block; }
-.chart-card { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:14px; }
-.chart-title { font-family:'Inter',sans-serif; font-size:0.9rem; color:#cdd9f0; margin-bottom:4px; }
-.chart-sub { font-size:0.62rem; color:#6a8aaa; margin-bottom:16px; line-height:1.6; }
+.chart-card { background:#161b24; border:1px solid #252d3d; border-radius:12px; padding:20px; margin-bottom:14px; }
+.chart-title { font-family:'Inter',sans-serif; font-size:0.9rem; color:#dce4f2; margin-bottom:4px; }
+.chart-sub { font-size:0.62rem; color:#8a9ab8; margin-bottom:16px; line-height:1.6; }
 .chart-wrap { position:relative; height:280px; }
 .chart-wrap-tall { position:relative; height:320px; }
 .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.insight { background:#0c0f1a; border-left:2px solid #00ffc8; border-radius:0 6px 6px 0; padding:10px 13px; margin-top:12px; font-size:0.63rem; color:#6a8aaa; line-height:1.6; }
-.insight strong { color:#00ffc8; }
+.insight { background:#12151e; border-left:2px solid #60b8d4; border-radius:0 6px 6px 0; padding:10px 13px; margin-top:12px; font-size:0.63rem; color:#8a9ab8; line-height:1.6; }
+.insight strong { color:#60b8d4; }
 
 /* ── INTRO MODAL ── */
 .modal-overlay {
@@ -192,12 +193,12 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 @keyframes fadeOutOverlay { from{opacity:1} to{opacity:0} }
 
 .modal-box {
-  background:#0c0f1a;
-  border:1px solid #00ffc8;
+  background:#12151e;
+  border:1px solid #60b8d4;
   border-radius:14px;
   max-width:680px; width:100%;
   padding:32px 36px;
-  box-shadow:0 0 60px rgba(0,255,200,0.12);
+  box-shadow:0 0 60px rgba(96,184,212,0.12);
   position:relative;
   animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1);
 }
@@ -205,47 +206,47 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 
 .modal-tag {
   font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
-  color:#00ffc8; border:1px solid rgba(0,255,200,0.35);
+  color:#60b8d4; border:1px solid rgba(96,184,212,0.35);
   border-radius:20px; display:inline-block; padding:4px 14px; margin-bottom:18px;
 }
 .modal-title {
-  font-family:'Inter',sans-serif; font-size:1.5rem; color:#00ffc8;
-  text-shadow:0 0 24px rgba(0,255,200,0.3); line-height:1.2; margin-bottom:6px;
+  font-family:'Inter',sans-serif; font-size:1.5rem; color:#60b8d4;
+  text-shadow:none; line-height:1.2; margin-bottom:6px;
 }
-.modal-subtitle { font-size:0.68rem; color:#6a8aaa; margin-bottom:22px; }
+.modal-subtitle { font-size:0.68rem; color:#8a9ab8; margin-bottom:22px; }
 
 .modal-section { margin-bottom:18px; }
 .modal-section-label {
   font-size:0.57rem; text-transform:uppercase; letter-spacing:0.12em;
-  color:#00ffc8; opacity:0.7; margin-bottom:8px;
+  color:#60b8d4; opacity:0.7; margin-bottom:8px;
 }
 .modal-section-body {
   font-size:0.68rem; color:#8a9ab8; line-height:1.85;
 }
-.modal-section-body strong { color:#cdd9f0; }
+.modal-section-body strong { color:#dce4f2; }
 
-.modal-divider { border:none; border-top:1px solid #1c2436; margin:20px 0; }
+.modal-divider { border:none; border-top:1px solid #252d3d; margin:20px 0; }
 
 .modal-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px; }
 .modal-col {
-  background:#131826; border:1px solid #1c2436; border-radius:9px; padding:14px 16px;
+  background:#161b24; border:1px solid #252d3d; border-radius:9px; padding:14px 16px;
 }
-.modal-col-label { font-size:0.57rem; text-transform:uppercase; letter-spacing:0.1em; color:#6a8aaa; margin-bottom:6px; }
-.modal-col-val { font-size:0.72rem; color:#cdd9f0; line-height:1.7; }
-.modal-col-val span { color:#00ffc8; }
+.modal-col-label { font-size:0.57rem; text-transform:uppercase; letter-spacing:0.1em; color:#8a9ab8; margin-bottom:6px; }
+.modal-col-val { font-size:0.72rem; color:#dce4f2; line-height:1.7; }
+.modal-col-val span { color:#60b8d4; }
 
 .modal-close-row { text-align:center; }
 .modal-close-btn {
-  padding:12px 48px; background:#00ffc8; color:#000; border:none;
+  padding:12px 48px; background:#60b8d4; color:#000; border:none;
   border-radius:7px; font-family:'IBM Plex Mono',monospace;
   font-size:0.78rem; font-weight:600; cursor:pointer; letter-spacing:0.04em;
 }
 .modal-close-btn:hover { opacity:0.88; transform:translateY(-1px); }
 .modal-skip {
-  display:block; margin-top:10px; font-size:0.58rem; color:#3a4a60; cursor:pointer;
+  display:block; margin-top:10px; font-size:0.58rem; color:#4e5f7a; cursor:pointer;
   background:none; border:none; font-family:'IBM Plex Mono',monospace;
 }
-.modal-skip:hover { color:#6a8aaa; }
+.modal-skip:hover { color:#8a9ab8; }
 </style>
 </head>
 <body>
@@ -309,13 +310,14 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 <div class="wrap">
 
 <div class="topbar">
-  <div class="logo">HE Burnout<small>Homomorphic Encryption · Developer Burnout Dataset · CS6903/4783</small></div>
-  <div class="badge">CKKS · 128-bit · TenSEAL</div>
-</div>
-
-<div class="tab-bar">
-  <button class="tab-btn active" id="tab-query" onclick="showTab('query')">▶  Live Query</button>
-  <button class="tab-btn" id="tab-charts" onclick="showTab('charts')">📊  Performance Charts</button>
+  <div class="topbar-top">
+    <div class="logo">HE Burnout<small>Homomorphic Encryption · Developer Burnout Dataset · CS6903/4783</small></div>
+    <div class="badge">CKKS · 128-bit · TenSEAL</div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-query" onclick="showTab('query')">▶  Live Query</button>
+    <button class="tab-btn" id="tab-charts" onclick="showTab('charts')">📊  Performance Charts</button>
+  </div>
 </div>
 
 <!-- QUERY TAB -->
@@ -442,7 +444,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
           </div>
           <div class="res-meta-item">
             <div class="rmi-label">Privacy</div>
-            <div class="rmi-val" style="color:#ff7043;">None ⚠</div>
+            <div class="rmi-val" style="color:#e8754f;">None ⚠</div>
           </div>
         </div>
       </div>
@@ -791,8 +793,8 @@ function clearHistory() {
 }
 
 var GC = {color: 'rgba(255,255,255,0.07)'};
-var TC = {color: '#6a8aaa', font: {family: 'IBM Plex Mono', size: 10}};
-var COLS = ['#00ffc8','#ff7043','#a78bfa','#ffe246','#4dd0e1'];
+var TC = {color: '#8a9ab8', font: {family: 'IBM Plex Mono', size: 10}};
+var COLS = ['#60b8d4','#e8754f','#9d85e8','#f5b942','#64b5e8'];
 var QKS = ['Q1','Q2','Q3','Q4','Q5'];
 var QNS = ['Q1 avg(burn)','Q2 avg(fatigue)','Q3 weighted','Q4 scaled','Q5 stress'];
 
@@ -800,11 +802,11 @@ function baseOpts(yLabel, logY) {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {legend: {labels: {color: '#cdd9f0', font: {family: 'IBM Plex Mono', size: 11}}}},
+    plugins: {legend: {labels: {color: '#dce4f2', font: {family: 'IBM Plex Mono', size: 11}}}},
     scales: {
       x: {grid: GC, ticks: TC},
       y: {grid: GC, ticks: TC, type: logY ? 'logarithmic' : 'linear',
-          title: {display: true, text: yLabel, color: '#6a8aaa', font: {family: 'IBM Plex Mono', size: 10}}}
+          title: {display: true, text: yLabel, color: '#8a9ab8', font: {family: 'IBM Plex Mono', size: 10}}}
     }
   };
 }
@@ -813,8 +815,8 @@ function buildCharts() {
   new Chart(document.getElementById('ch-upload'), {
     type: 'bar',
     data: {labels: XL, datasets: [
-      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.uhe;}), backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
-      {label: 'Plaintext', data: BENCH.map(function(d){return d.upt;}), backgroundColor: 'rgba(255,112,67,0.15)', borderColor: '#ff7043', borderWidth: 1.5}
+      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.uhe;}), backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
+      {label: 'Plaintext', data: BENCH.map(function(d){return d.upt;}), backgroundColor: 'rgba(232,117,79,0.15)', borderColor: '#e8754f', borderWidth: 1.5}
     ]},
     options: baseOpts('Time (s)', false)
   });
@@ -831,8 +833,8 @@ function buildCharts() {
   new Chart(document.getElementById('ch-compare'), {
     type: 'bar',
     data: {labels: XL, datasets: [
-      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.q.Q1.ht;}), backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
-      {label: 'Plaintext', data: BENCH.map(function(d){return d.q.Q1.pt;}), backgroundColor: 'rgba(255,112,67,0.15)', borderColor: '#ff7043', borderWidth: 1.5}
+      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.q.Q1.ht;}), backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
+      {label: 'Plaintext', data: BENCH.map(function(d){return d.q.Q1.pt;}), backgroundColor: 'rgba(232,117,79,0.15)', borderColor: '#e8754f', borderWidth: 1.5}
     ]},
     options: baseOpts('Time (s)', false)
   });
@@ -869,16 +871,16 @@ function buildCharts() {
       type: 'bar',
       data: {labels: labels, datasets: [
         {label: 'CKKS (TenSEAL)', data: ckksReal,
-         backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
+         backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
         {label: 'BFV (Pyfhel)',   data: bfvReal,
-         backgroundColor: 'rgba(192,57,90,0.15)', borderColor: '#C0395A', borderWidth: 1.5}
+         backgroundColor: 'rgba(196,84,110,0.15)', borderColor: '#c4546e', borderWidth: 1.5}
       ]},
       options: {
         responsive: true,
         maintainAspectRatio: false,
         layout: {padding: {bottom: 30}},
         plugins: {
-          legend: {labels: {color: '#cdd9f0', font: {family: 'IBM Plex Mono', size: 11}}},
+          legend: {labels: {color: '#dce4f2', font: {family: 'IBM Plex Mono', size: 11}}},
           tooltip: {
             callbacks: {
               title: function(items) { return items[0].label; },
@@ -889,14 +891,14 @@ function buildCharts() {
                 return ['BFV:  ' + bt.toFixed(4) + 's', 'Ratio: ' + (bt/Math.max(ct,1e-9)).toFixed(1) + '× slower'];
               }
             },
-            backgroundColor: '#131826', borderColor: '#1c2436', borderWidth: 1,
-            titleColor: '#cdd9f0', bodyColor: '#6a8aaa', padding: 10, displayColors: true
+            backgroundColor: '#161b24', borderColor: '#252d3d', borderWidth: 1,
+            titleColor: '#dce4f2', bodyColor: '#8a9ab8', padding: 10, displayColors: true
           }
         },
         scales: {
           x: {grid: GC, ticks: TC},
           y: {grid: GC, ticks: TC, type: 'linear',
-              title: {display: true, text: 'Query time (s)', color: '#6a8aaa',
+              title: {display: true, text: 'Query time (s)', color: '#8a9ab8',
                       font: {family: 'IBM Plex Mono', size: 10}}}
         }
       },
@@ -911,9 +913,9 @@ function buildCharts() {
           for (var i = 0; i < ks.length; i++) {
             var x = xAxis.getPixelForValue(i);
             var y = chart.chartArea.bottom + 28;
-            ctx.fillStyle = '#00ffc8';
+            ctx.fillStyle = '#60b8d4';
             ctx.fillText('C:' + ckksReal[i].toFixed(3) + 's', x, y);
-            ctx.fillStyle = '#C0395A';
+            ctx.fillStyle = '#c4546e';
             ctx.fillText('B:' + bfvReal[i].toFixed(3) + 's', x, y + 13);
           }
           ctx.restore();
