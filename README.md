@@ -86,8 +86,7 @@ Relin keys      : yes  (required after multiplication)
 
 ```
 AppliedCryptographyProject3/
-├── README.md                          # Original README
-├── READMEv2.md                        # This file
+├── README.md                          # Project README
 └── he_burnout/
     ├── app.py                         # Flask web dashboard (main entry point)
     ├── he_engine.py                   # CKKS HE engine — Alice, Carol, plaintext baseline
