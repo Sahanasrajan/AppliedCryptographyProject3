@@ -1,30 +1,30 @@
 [
   {
     "n": 100,
-    "upload_he_s": 0.0461,
-    "upload_plain_s": 0.0,
+    "upload_he_s": 0.0466,
+    "upload_plain_s": 0.001331,
     "queries": {
       "Q1_avg_burn_rate": {
         "he_result": 0.484595,
         "pt_result": 0.484595,
-        "he_time_s": 0.0384,
-        "pt_time_s": 0.001004,
-        "abs_error": 3e-08,
-        "speedup_plain_vs_he": 38.2
+        "he_time_s": 0.0491,
+        "pt_time_s": 8.9e-05,
+        "abs_error": 1e-08,
+        "speedup_plain_vs_he": 551.8
       },
       "Q2_avg_mental_fatigue": {
         "he_result": 4.8598,
         "pt_result": 4.8598,
-        "he_time_s": 0.0375,
-        "pt_time_s": 0.0,
-        "abs_error": 4e-08
+        "he_time_s": 0.0508,
+        "pt_time_s": 8.1e-05,
+        "abs_error": 1e-08
       },
       "Q3_weighted_burn_risk": {
-        "he_result": 5.3445,
+        "he_result": 5.3444,
         "pt_result": 5.3445,
-        "he_time_s": 0.0253,
-        "pt_time_s": 0.0,
-        "abs_error": 4e-06
+        "he_time_s": 0.0288,
+        "pt_time_s": 4.1e-05,
+        "abs_error": 0.0
       },
       "Q4_scaled_hours": {
         "he_sample5": [
@@ -41,8 +41,8 @@
           1.5,
           0.925
         ],
-        "he_time_s": 0.005,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0033,
+        "pt_time_s": 1.6e-05,
         "max_abs_error_first10": 2.2e-07
       },
       "Q5_stress_index": {
@@ -60,71 +60,38 @@
           12.03,
           7.57
         ],
-        "he_time_s": 0.0081,
-        "pt_time_s": 0.0,
-        "max_abs_error_first10": 0.0
-      }
-    },
-    "upload_bfv_s": 0.0329,
-    "bfv_queries": {
-      "Q1": {
-        "label": "avg burn_rate",
-        "bfv_result": 0.484595,
-        "bfv_time_s": 1.6123,
-        "bfv_abs_error": 0.0
-      },
-      "Q2": {
-        "label": "avg mental_fatigue",
-        "bfv_result": 4.8598,
-        "bfv_time_s": 1.6157,
-        "bfv_abs_error": 0.0
-      },
-      "Q3": {
-        "label": "weighted burn_rate",
-        "bfv_result": 5.34445,
-        "bfv_time_s": 1.6186,
-        "bfv_abs_error": 0.0
-      },
-      "Q4": {
-        "label": "scaled hours",
-        "bfv_result": 1.1,
-        "bfv_time_s": 0.0033,
-        "bfv_abs_error": 0.0
-      },
-      "Q5": {
-        "label": "stress index",
-        "bfv_result": 6.88,
-        "bfv_time_s": 0.002,
-        "bfv_abs_error": 0.0
+        "he_time_s": 0.0074,
+        "pt_time_s": 1.3e-05,
+        "max_abs_error_first10": 1e-08
       }
     }
   },
   {
     "n": 500,
-    "upload_he_s": 0.0453,
-    "upload_plain_s": 0.001002,
+    "upload_he_s": 0.0522,
+    "upload_plain_s": 0.000698,
     "queries": {
       "Q1_avg_burn_rate": {
         "he_result": 0.4735,
         "pt_result": 0.4735,
-        "he_time_s": 0.0811,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1079,
+        "pt_time_s": 6.5e-05,
         "abs_error": 1e-08,
-        "speedup_plain_vs_he": 81077337.3
+        "speedup_plain_vs_he": 1663.4
       },
       "Q2_avg_mental_fatigue": {
         "he_result": 4.94362,
         "pt_result": 4.94362,
-        "he_time_s": 0.0822,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1041,
+        "pt_time_s": 6.2e-05,
         "abs_error": 1e-08
       },
       "Q3_weighted_burn_risk": {
         "he_result": 27.2371,
         "pt_result": 27.2371,
-        "he_time_s": 0.0518,
-        "pt_time_s": 0.0,
-        "abs_error": 9e-06
+        "he_time_s": 0.0663,
+        "pt_time_s": 8.1e-05,
+        "abs_error": 3e-06
       },
       "Q4_scaled_hours": {
         "he_sample5": [
@@ -141,8 +108,8 @@
           1.5,
           0.925
         ],
-        "he_time_s": 0.004,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0035,
+        "pt_time_s": 3.1e-05,
         "max_abs_error_first10": 2.2e-07
       },
       "Q5_stress_index": {
@@ -160,70 +127,37 @@
           12.03,
           7.57
         ],
-        "he_time_s": 0.007,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0068,
+        "pt_time_s": 1.5e-05,
         "max_abs_error_first10": 0.0
-      }
-    },
-    "upload_bfv_s": 0.0323,
-    "bfv_queries": {
-      "Q1": {
-        "label": "avg burn_rate",
-        "bfv_result": 0.4735,
-        "bfv_time_s": 2.022,
-        "bfv_abs_error": 0.0
-      },
-      "Q2": {
-        "label": "avg mental_fatigue",
-        "bfv_result": 4.94362,
-        "bfv_time_s": 2.0204,
-        "bfv_abs_error": 0.0
-      },
-      "Q3": {
-        "label": "weighted burn_rate",
-        "bfv_result": 27.237065,
-        "bfv_time_s": 2.0236,
-        "bfv_abs_error": 0.0
-      },
-      "Q4": {
-        "label": "scaled hours",
-        "bfv_result": 1.1,
-        "bfv_time_s": 0.0043,
-        "bfv_abs_error": 0.0
-      },
-      "Q5": {
-        "label": "stress index",
-        "bfv_result": 6.88,
-        "bfv_time_s": 0.002,
-        "bfv_abs_error": 0.0
       }
     }
   },
   {
     "n": 1000,
-    "upload_he_s": 0.0437,
-    "upload_plain_s": 0.0,
+    "upload_he_s": 0.062,
+    "upload_plain_s": 0.000707,
     "queries": {
       "Q1_avg_burn_rate": {
         "he_result": 0.473575,
         "pt_result": 0.473575,
-        "he_time_s": 0.093,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1448,
+        "pt_time_s": 6.4e-05,
         "abs_error": 0.0,
-        "speedup_plain_vs_he": 92957019.8
+        "speedup_plain_vs_he": 2258.0
       },
       "Q2_avg_mental_fatigue": {
         "he_result": 4.90671,
         "pt_result": 4.90671,
-        "he_time_s": 0.0926,
-        "pt_time_s": 0.001039,
+        "he_time_s": 0.1198,
+        "pt_time_s": 6.4e-05,
         "abs_error": 0.0
       },
       "Q3_weighted_burn_risk": {
         "he_result": 54.7591,
         "pt_result": 54.7591,
-        "he_time_s": 0.0588,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0768,
+        "pt_time_s": 7.5e-05,
         "abs_error": 5e-06
       },
       "Q4_scaled_hours": {
@@ -241,8 +175,8 @@
           1.5,
           0.925
         ],
-        "he_time_s": 0.004,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0034,
+        "pt_time_s": 3.2e-05,
         "max_abs_error_first10": 2.2e-07
       },
       "Q5_stress_index": {
@@ -260,71 +194,38 @@
           12.03,
           7.57
         ],
-        "he_time_s": 0.0071,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0067,
+        "pt_time_s": 4.1e-05,
         "max_abs_error_first10": 0.0
-      }
-    },
-    "upload_bfv_s": 0.0329,
-    "bfv_queries": {
-      "Q1": {
-        "label": "avg burn_rate",
-        "bfv_result": 0.473575,
-        "bfv_time_s": 2.2183,
-        "bfv_abs_error": 0.0
-      },
-      "Q2": {
-        "label": "avg mental_fatigue",
-        "bfv_result": 4.90671,
-        "bfv_time_s": 2.2508,
-        "bfv_abs_error": 0.0
-      },
-      "Q3": {
-        "label": "weighted burn_rate",
-        "bfv_result": 54.75909,
-        "bfv_time_s": 2.239,
-        "bfv_abs_error": 0.0
-      },
-      "Q4": {
-        "label": "scaled hours",
-        "bfv_result": 1.1,
-        "bfv_time_s": 0.003,
-        "bfv_abs_error": 0.0
-      },
-      "Q5": {
-        "label": "stress index",
-        "bfv_result": 6.88,
-        "bfv_time_s": 0.002,
-        "bfv_abs_error": 0.0
       }
     }
   },
   {
     "n": 3000,
-    "upload_he_s": 0.0448,
-    "upload_plain_s": 0.001001,
+    "upload_he_s": 0.0551,
+    "upload_plain_s": 0.001024,
     "queries": {
       "Q1_avg_burn_rate": {
         "he_result": 0.46831,
         "pt_result": 0.46831,
-        "he_time_s": 0.1128,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1833,
+        "pt_time_s": 6.6e-05,
         "abs_error": 0.0,
-        "speedup_plain_vs_he": 112750768.7
+        "speedup_plain_vs_he": 2795.9
       },
       "Q2_avg_mental_fatigue": {
         "he_result": 4.948453,
         "pt_result": 4.948453,
-        "he_time_s": 0.113,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1666,
+        "pt_time_s": 6.4e-05,
         "abs_error": 0.0
       },
       "Q3_weighted_burn_risk": {
         "he_result": 160.3489,
         "pt_result": 160.3489,
-        "he_time_s": 0.0724,
-        "pt_time_s": 0.0,
-        "abs_error": 1.2e-05
+        "he_time_s": 0.0918,
+        "pt_time_s": 0.000157,
+        "abs_error": 1.8e-05
       },
       "Q4_scaled_hours": {
         "he_sample5": [
@@ -341,8 +242,8 @@
           1.5,
           0.925
         ],
-        "he_time_s": 0.0046,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0034,
+        "pt_time_s": 4.8e-05,
         "max_abs_error_first10": 2.2e-07
       },
       "Q5_stress_index": {
@@ -360,71 +261,38 @@
           12.03,
           7.57
         ],
-        "he_time_s": 0.0064,
-        "pt_time_s": 0.0,
-        "max_abs_error_first10": 1e-08
-      }
-    },
-    "upload_bfv_s": 0.0319,
-    "bfv_queries": {
-      "Q1": {
-        "label": "avg burn_rate",
-        "bfv_result": 0.46831,
-        "bfv_time_s": 2.6185,
-        "bfv_abs_error": 0.0
-      },
-      "Q2": {
-        "label": "avg mental_fatigue",
-        "bfv_result": 4.948453,
-        "bfv_time_s": 2.6673,
-        "bfv_abs_error": 0.0
-      },
-      "Q3": {
-        "label": "weighted burn_rate",
-        "bfv_result": 160.34888,
-        "bfv_time_s": 2.6204,
-        "bfv_abs_error": 0.0
-      },
-      "Q4": {
-        "label": "scaled hours",
-        "bfv_result": 1.1,
-        "bfv_time_s": 0.003,
-        "bfv_abs_error": 0.0
-      },
-      "Q5": {
-        "label": "stress index",
-        "bfv_result": 6.88,
-        "bfv_time_s": 0.0035,
-        "bfv_abs_error": 0.0
+        "he_time_s": 0.0063,
+        "pt_time_s": 4.1e-05,
+        "max_abs_error_first10": 0.0
       }
     }
   },
   {
     "n": 7000,
-    "upload_he_s": 0.0984,
-    "upload_plain_s": 0.0,
+    "upload_he_s": 0.1008,
+    "upload_plain_s": 0.000722,
     "queries": {
       "Q1_avg_burn_rate": {
         "he_result": 0.468732,
         "pt_result": 0.468732,
-        "he_time_s": 0.1,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1569,
+        "pt_time_s": 6.9e-05,
         "abs_error": 0.0,
-        "speedup_plain_vs_he": 99998474.1
+        "speedup_plain_vs_he": 2260.9
       },
       "Q2_avg_mental_fatigue": {
         "he_result": 4.993321,
         "pt_result": 4.993321,
-        "he_time_s": 0.0989,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.1717,
+        "pt_time_s": 8.1e-05,
         "abs_error": 0.0
       },
       "Q3_weighted_burn_risk": {
         "he_result": 373.6975,
         "pt_result": 373.6974,
-        "he_time_s": 0.0663,
-        "pt_time_s": 0.000999,
-        "abs_error": 4.3e-05
+        "he_time_s": 0.1203,
+        "pt_time_s": 0.000338,
+        "abs_error": 5.2e-05
       },
       "Q4_scaled_hours": {
         "he_sample5": [
@@ -441,8 +309,8 @@
           1.5,
           0.925
         ],
-        "he_time_s": 0.008,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.007,
+        "pt_time_s": 0.000148,
         "max_abs_error_first10": 2.2e-07
       },
       "Q5_stress_index": {
@@ -460,42 +328,9 @@
           12.03,
           7.57
         ],
-        "he_time_s": 0.013,
-        "pt_time_s": 0.0,
+        "he_time_s": 0.0141,
+        "pt_time_s": 0.000143,
         "max_abs_error_first10": 0.0
-      }
-    },
-    "upload_bfv_s": 0.0632,
-    "bfv_queries": {
-      "Q1": {
-        "label": "avg burn_rate",
-        "bfv_result": 0.468732,
-        "bfv_time_s": 5.2867,
-        "bfv_abs_error": 0.0
-      },
-      "Q2": {
-        "label": "avg mental_fatigue",
-        "bfv_result": 4.993321,
-        "bfv_time_s": 5.2239,
-        "bfv_abs_error": 0.0
-      },
-      "Q3": {
-        "label": "weighted burn_rate",
-        "bfv_result": 373.69741,
-        "bfv_time_s": 5.2738,
-        "bfv_abs_error": 0.0
-      },
-      "Q4": {
-        "label": "scaled hours",
-        "bfv_result": 1.1,
-        "bfv_time_s": 0.0076,
-        "bfv_abs_error": 0.0
-      },
-      "Q5": {
-        "label": "stress index",
-        "bfv_result": 6.88,
-        "bfv_time_s": 0.0054,
-        "bfv_abs_error": 0.0
       }
     }
   }
