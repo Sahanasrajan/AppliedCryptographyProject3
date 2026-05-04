@@ -41,171 +41,294 @@ BENCH = [
   {"n":7000,"uhe":0.129,"upt":0.000471,"q":{"Q1":{"ht":0.174,"pt":0.000072,"e":2e-9},"Q2":{"ht":0.163,"pt":0.000056,"e":1.9e-9},"Q3":{"ht":0.087,"pt":0.000252,"e":6.3e-5},"Q4":{"ht":0.034,"pt":0.000081,"e":2.2e-7},"Q5":{"ht":0.012,"pt":0.000079,"e":4.4e-9}}}
 ]
 
+_cmp_path = os.path.join(os.path.dirname(__file__), "benchmark_results.json")
+BENCH_COMPARE = json.load(open(_cmp_path)) if os.path.exists(_cmp_path) else []
+
 HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HE Burnout App</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #07090f; color: #cdd9f0; font-family: 'IBM Plex Mono', monospace; }
+body { background: #0f1117; color: #dce4f2; font-family: 'IBM Plex Mono', monospace; }
 body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image: linear-gradient(rgba(0,255,200,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,200,0.025) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(96,184,212,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96,184,212,0.025) 1px, transparent 1px);
   background-size: 44px 44px; }
 .wrap { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:24px 20px; }
 
-.topbar { display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid #1c2436; }
-.logo { font-family:'Syne',sans-serif; font-size:1.4rem; color:#00ffc8; text-shadow:0 0 24px rgba(0,255,200,0.3); }
-.logo small { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#6a8aaa; display:block; margin-top:3px; font-weight:400; }
-.badge { font-size:0.6rem; padding:5px 12px; border:1px solid #00ffc8; border-radius:20px; color:#00ffc8; }
+.topbar { display:flex; flex-direction:column; gap:16px; padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid #252d3d; }
+.topbar-top { display:flex; justify-content:space-between; align-items:center; }
+.logo { font-family:'Inter',sans-serif; font-size:1.4rem; color:#60b8d4; text-shadow:none; }
+.logo small { font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#8a9ab8; display:block; margin-top:3px; font-weight:400; }
+.badge { font-size:0.6rem; padding:5px 12px; border:1px solid #60b8d4; border-radius:20px; color:#60b8d4; }
 
-.tab-bar { display:flex; gap:6px; margin-bottom:22px; }
-.tab-btn { padding:9px 22px; border-radius:7px; border:1px solid #1c2436; background:#0c0f1a; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; cursor:pointer; }
-.tab-btn.active { border-color:#00ffc8; background:rgba(0,255,200,0.08); color:#00ffc8; }
+.tab-bar { display:flex; gap:6px; }
+.tab-btn { padding:9px 22px; border-radius:7px; border:1px solid #252d3d; background:#12151e; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; cursor:pointer; }
+.tab-btn.active { border-color:#60b8d4; background:rgba(96,184,212,0.08); color:#60b8d4; }
 
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
 
-.pipe { display:flex; align-items:center; background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:12px 14px; margin-bottom:18px; overflow-x:auto; gap:0; }
-.pstep { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:80px; text-align:center; font-size:0.62rem; color:#3a4a60; padding:6px; border-radius:7px; }
-.pstep.active { color:#00ffc8; background:rgba(0,255,200,0.05); }
+.pipe { display:flex; align-items:center; background:#12151e; border:1px solid #252d3d; border-radius:8px; padding:12px 14px; overflow-x:auto; gap:0; }
+.pstep { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:80px; text-align:center; font-size:0.62rem; color:#4e5f7a; padding:6px; border-radius:7px; }
+.pstep.active { color:#60b8d4; background:rgba(96,184,212,0.05); }
 .pnum { width:22px; height:22px; border-radius:50%; border:1px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.6rem; }
-.pstep.active .pnum { background:#00ffc8; color:#000; }
-.parr { color:#3a4a60; padding:0 3px; flex-shrink:0; }
+.pstep.active .pnum { background:#60b8d4; color:#000; }
+.parr { color:#4e5f7a; padding:0 3px; flex-shrink:0; }
 
 .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-.card { background:#131826; border:1px solid #1c2436; border-radius:10px; padding:16px; }
-.card-label { font-size:0.58rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+.card { background:#161b24; border:1px solid #252d3d; border-radius:10px; padding:16px; }
+.card-header { margin-bottom:12px; }
+.card-step { display:inline-block; font-size:0.55rem; color:#60b8d4; letter-spacing:0.15em; text-transform:uppercase; background:rgba(96,184,212,0.08); border:1px solid rgba(96,184,212,0.2); border-radius:4px; padding:2px 9px; margin-bottom:6px; }
+.card-label { font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:800; color:#dce4f2; letter-spacing:0; margin-bottom:0; }
 .btn-row { display:flex; flex-wrap:wrap; gap:6px; }
-.sel-btn { padding:6px 12px; border:1px solid #1c2436; border-radius:5px; background:#111520; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
-.sel-btn:hover { border-color:#6a8aaa; color:#cdd9f0; }
-.sel-btn.active { border-color:#00ffc8; background:rgba(0,255,200,0.08); color:#00ffc8; }
+.sel-btn { padding:6px 12px; border:1px solid #252d3d; border-radius:5px; background:#13172a; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
+.sel-btn:hover { border-color:#8a9ab8; color:#dce4f2; }
+.sel-btn.active { border-color:#60b8d4; background:rgba(96,184,212,0.08); color:#60b8d4; }
 
-.run-wrap { text-align:center; margin-bottom:16px; }
-.run-btn { padding:12px 40px; background:#00ffc8; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
+.run-section { background:#161b24; border:1px solid #252d3d; border-radius:10px; padding:16px; margin-bottom:14px; }
+.run-section-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.run-btn { padding:10px 32px; background:#60b8d4; color:#000; border:none; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; font-weight:600; cursor:pointer; }
 .run-btn:hover { opacity:0.88; transform:translateY(-1px); }
 .run-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
-.log-box { background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:14px; margin-bottom:14px; font-size:0.65rem; line-height:2; }
-.log-label { font-size:0.55rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
+.log-box { background:#12151e; border:1px solid #252d3d; border-radius:8px; padding:14px; font-size:0.65rem; line-height:2; }
+.log-label { font-size:0.55rem; color:#8a9ab8; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px; }
 .log-row { display:flex; gap:8px; }
-.log-t { color:#3a4a60; min-width:50px; }
-.log-alice { color:#00ffc8; }
-.log-carol { color:#a78bfa; }
-.log-done { color:#ffe246; font-weight:600; }
+.log-t { color:#7a8da8; min-width:50px; }
+.log-alice { color:#60b8d4; }
+.log-carol { color:#9d85e8; }
+.log-done { color:#f5b942; font-weight:600; }
 
-.result-box { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:16px; display:none; }
+.result-box { background:#161b24; border:1px solid #252d3d; border-radius:12px; padding:20px; margin-bottom:16px; display:none; }
 .result-box.show { display:block; }
-.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid #1c2436; }
-.res-title { font-size:0.65rem; color:#6a8aaa; }
-.res-title strong { display:block; font-size:0.85rem; color:#cdd9f0; margin-top:2px; }
-.res-tag { font-size:0.58rem; padding:3px 10px; background:rgba(0,255,200,0.08); border:1px solid rgba(0,255,200,0.25); border-radius:4px; color:#00ffc8; }
+.res-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; margin-bottom:16px; border-bottom:1px solid #252d3d; }
+.res-title { font-size:0.65rem; color:#a0afc8; }
+.res-title strong { display:block; font-size:0.85rem; color:#dce4f2; margin-top:2px; }
+.res-tag { font-size:0.58rem; padding:3px 10px; background:rgba(96,184,212,0.08); border:1px solid rgba(96,184,212,0.25); border-radius:4px; color:#60b8d4; }
 
 .res-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-.res-cell { border-radius:10px; padding:16px; border:1px solid #1c2436; }
-.res-cell.he { border-color:rgba(0,255,200,0.2); background:rgba(0,255,200,0.03); }
-.res-cell.pt { border-color:rgba(255,112,67,0.2); background:rgba(255,112,67,0.03); }
-.res-cell-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; font-weight:600; }
-.res-cell.he .res-cell-label { color:#00ffc8; }
-.res-cell.pt .res-cell-label { color:#ff7043; }
-.res-cell-how { font-size:0.6rem; color:#3a4a60; margin-bottom:10px; line-height:1.5; border-left:2px solid #1c2436; padding-left:8px; }
-.res-cell.he .res-cell-how { border-color:rgba(0,255,200,0.2); }
-.res-cell.pt .res-cell-how { border-color:rgba(255,112,67,0.2); }
+.res-cell { border-radius:10px; padding:16px; border:1px solid #252d3d; }
+.res-cell.he { border-color:rgba(96,184,212,0.2); background:rgba(96,184,212,0.03); }
+.res-cell.pt { border-color:rgba(232,117,79,0.2); background:rgba(232,117,79,0.03); }
+.res-cell-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; font-weight:600; }
+.res-cell.he .res-cell-label { color:#60b8d4; }
+.res-cell.pt .res-cell-label { color:#e8754f; }
+.res-cell-how { font-size:0.65rem; color:#8a9ab8; margin-bottom:10px; line-height:1.6; border-left:2px solid #252d3d; padding-left:8px; }
+.res-cell.he .res-cell-how { border-color:rgba(96,184,212,0.2); }
+.res-cell.pt .res-cell-how { border-color:rgba(232,117,79,0.2); }
 .res-val { font-size:1.5rem; font-weight:600; line-height:1; margin-bottom:10px; }
-.res-cell.he .res-val { color:#00ffc8; }
-.res-cell.pt .res-val { color:#ff7043; }
+.res-cell.he .res-val { color:#60b8d4; }
+.res-cell.pt .res-val { color:#e8754f; }
 .res-meta { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
-.res-meta-item { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 10px; }
-.res-meta-item .rmi-label { font-size:0.52rem; color:#3a4a60; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
-.res-meta-item .rmi-val { font-size:0.72rem; color:#6a8aaa; }
-.res-cell.he .rmi-val { color:#00ffc8; }
-.res-cell.pt .rmi-val { color:#ff7043; }
+.res-meta-item { background:#12151e; border:1px solid #252d3d; border-radius:5px; padding:6px 10px; }
+.res-meta-item .rmi-label { font-size:0.58rem; color:#7a8da8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:2px; }
+.res-meta-item .rmi-val { font-size:0.72rem; color:#b0bdd4; }
+.res-cell.he .rmi-val { color:#60b8d4; }
+.res-cell.pt .rmi-val { color:#e8754f; }
 
 .info-sections { display:flex; flex-direction:column; gap:10px; }
 .info-section { border-radius:8px; padding:14px 16px; border:1px solid; }
-.info-section.err-section { background:rgba(255,226,70,0.04); border-color:rgba(255,226,70,0.2); }
-.info-section.slow-section { background:rgba(255,112,67,0.04); border-color:rgba(255,112,67,0.15); }
-.info-section.match-section { background:rgba(0,255,200,0.03); border-color:rgba(0,255,200,0.15); }
+.info-section.err-section { background:rgba(245,185,66,0.04); border-color:rgba(245,185,66,0.2); }
+.info-section.slow-section { background:rgba(232,117,79,0.04); border-color:rgba(232,117,79,0.15); }
+.info-section.match-section { background:rgba(96,184,212,0.03); border-color:rgba(96,184,212,0.15); }
 .info-section-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
-.info-section-title { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
-.err-section .info-section-title { color:#ffe246; }
-.slow-section .info-section-title { color:#ff7043; }
-.match-section .info-section-title { color:#00ffc8; }
+.info-section-title { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; }
+.err-section .info-section-title { color:#f5b942; }
+.slow-section .info-section-title { color:#e8754f; }
+.match-section .info-section-title { color:#60b8d4; }
 .info-big-val { font-size:1.3rem; font-weight:600; }
-.err-section .info-big-val { color:#ffe246; }
-.slow-section .info-big-val { color:#ff7043; }
-.match-section .info-big-val { color:#00ffc8; }
-.info-section-body { font-size:0.62rem; color:#6a8aaa; line-height:1.7; }
-.info-section-body strong { color:#cdd9f0; }
-.info-formula { background:#0c0f1a; border:1px solid #1c2436; border-radius:5px; padding:6px 12px; font-size:0.62rem; color:#a78bfa; margin-top:8px; font-family:'IBM Plex Mono',monospace; }
-.match-pill { display:inline-block; background:rgba(0,255,200,0.1); border:1px solid rgba(0,255,200,0.3); border-radius:4px; color:#00ffc8; padding:1px 8px; font-size:0.6rem; margin-left:6px; }
+.err-section .info-big-val { color:#f5b942; }
+.slow-section .info-big-val { color:#e8754f; }
+.match-section .info-big-val { color:#60b8d4; }
+.info-section-body { font-size:0.68rem; color:#a0afc8; line-height:1.75; }
+.info-section-body strong { color:#dce4f2; }
+.info-formula { background:#12151e; border:1px solid #252d3d; border-radius:5px; padding:6px 12px; font-size:0.62rem; color:#9d85e8; margin-top:8px; font-family:'IBM Plex Mono',monospace; }
+.match-pill { display:inline-block; background:rgba(96,184,212,0.1); border:1px solid rgba(96,184,212,0.3); border-radius:4px; color:#60b8d4; padding:1px 8px; font-size:0.6rem; margin-left:6px; }
 
-.hist-box { background:#131826; border:1px solid #1c2436; border-radius:10px; overflow:hidden; }
-.hist-head { padding:10px 14px; border-bottom:1px solid #1c2436; font-size:0.58rem; color:#6a8aaa; text-transform:uppercase; letter-spacing:0.1em; display:flex; justify-content:space-between; align-items:center; }
-.hist-clear { background:none; border:1px solid #1c2436; color:#3a4a60; font-family:'IBM Plex Mono',monospace; font-size:0.58rem; padding:2px 8px; border-radius:3px; cursor:pointer; }
-.hist-empty { padding:18px; text-align:center; color:#3a4a60; font-size:0.65rem; }
+.hist-box { background:#161b24; border:1px solid #252d3d; border-radius:10px; overflow:hidden; }
+.hist-head { padding:10px 14px; border-bottom:1px solid #252d3d; font-size:0.58rem; color:#8a9ab8; text-transform:uppercase; letter-spacing:0.1em; display:flex; justify-content:space-between; align-items:center; }
+.hist-clear { background:none; border:1px solid #252d3d; color:#4e5f7a; font-family:'IBM Plex Mono',monospace; font-size:0.58rem; padding:2px 8px; border-radius:3px; cursor:pointer; }
+.hist-empty { padding:18px; text-align:center; color:#4e5f7a; font-size:0.65rem; }
 .htable { width:100%; border-collapse:collapse; font-size:0.65rem; }
-.htable th { background:#111520; color:#6a8aaa; padding:8px 12px; text-align:left; font-size:0.58rem; text-transform:uppercase; border-bottom:1px solid #1c2436; }
+.htable th { background:#13172a; color:#8a9ab8; padding:8px 12px; text-align:left; font-size:0.58rem; text-transform:uppercase; border-bottom:1px solid #252d3d; }
 .htable td { padding:8px 12px; border-bottom:1px solid rgba(28,36,54,0.6); }
 .htable tr:last-child td { border-bottom:none; }
-.c-he { color:#00ffc8; } .c-pt { color:#ff7043; } .c-err { color:#ffe246; }
-.slow-pill { background:rgba(255,112,67,0.1); border:1px solid rgba(255,112,67,0.25); color:#ff7043; border-radius:3px; padding:1px 6px; font-size:0.58rem; }
+.c-he { color:#60b8d4; } .c-pt { color:#e8754f; } .c-err { color:#f5b942; }
+.slow-pill { background:rgba(232,117,79,0.1); border:1px solid rgba(232,117,79,0.25); color:#e8754f; border-radius:3px; padding:1px 6px; font-size:0.58rem; }
 
-.chart-intro { background:#0c0f1a; border:1px solid #1c2436; border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:0.68rem; color:#6a8aaa; line-height:1.7; }
-.chart-intro strong { color:#00ffc8; }
+.chart-intro { background:#12151e; border:1px solid #252d3d; border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:0.68rem; color:#8a9ab8; line-height:1.7; }
+.chart-intro strong { color:#60b8d4; }
 .chart-tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
-.chart-tab { padding:7px 14px; border:1px solid #1c2436; border-radius:5px; background:#111520; color:#6a8aaa; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
-.chart-tab:hover { border-color:#6a8aaa; color:#cdd9f0; }
-.chart-tab.active { border-color:#00ffc8; background:rgba(0,255,200,0.07); color:#00ffc8; }
+.chart-tab { padding:7px 14px; border:1px solid #252d3d; border-radius:5px; background:#13172a; color:#8a9ab8; font-family:'IBM Plex Mono',monospace; font-size:0.65rem; cursor:pointer; }
+.chart-tab:hover { border-color:#8a9ab8; color:#dce4f2; }
+.chart-tab.active { border-color:#60b8d4; background:rgba(96,184,212,0.07); color:#60b8d4; }
 .chart-panel { display:none; }
 .chart-panel.active { display:block; }
-.chart-card { background:#131826; border:1px solid #1c2436; border-radius:12px; padding:20px; margin-bottom:14px; }
-.chart-title { font-family:'Syne',sans-serif; font-size:0.9rem; color:#cdd9f0; margin-bottom:4px; }
-.chart-sub { font-size:0.62rem; color:#6a8aaa; margin-bottom:16px; line-height:1.6; }
+.chart-card { background:#161b24; border:1px solid #252d3d; border-radius:12px; padding:20px; margin-bottom:14px; }
+.chart-title { font-family:'Inter',sans-serif; font-size:0.9rem; color:#dce4f2; margin-bottom:4px; }
+.chart-sub { font-size:0.62rem; color:#8a9ab8; margin-bottom:16px; line-height:1.6; }
 .chart-wrap { position:relative; height:280px; }
 .chart-wrap-tall { position:relative; height:320px; }
 .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.insight { background:#0c0f1a; border-left:2px solid #00ffc8; border-radius:0 6px 6px 0; padding:10px 13px; margin-top:12px; font-size:0.63rem; color:#6a8aaa; line-height:1.6; }
-.insight strong { color:#00ffc8; }
+.insight { background:#12151e; border-left:2px solid #60b8d4; border-radius:0 6px 6px 0; padding:10px 13px; margin-top:12px; font-size:0.63rem; color:#8a9ab8; line-height:1.6; }
+.insight strong { color:#60b8d4; }
+
+/* ── INTRO MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  animation:fadeInOverlay 0.3s ease;
+}
+.modal-overlay.hide { animation:fadeOutOverlay 0.25s ease forwards; }
+@keyframes fadeInOverlay  { from{opacity:0} to{opacity:1} }
+@keyframes fadeOutOverlay { from{opacity:1} to{opacity:0} }
+
+.modal-box {
+  background:#12151e;
+  border:1px solid #60b8d4;
+  border-radius:14px;
+  max-width:680px; width:100%;
+  padding:32px 36px;
+  box-shadow:0 0 60px rgba(96,184,212,0.12);
+  position:relative;
+  animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.modal-tag {
+  font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:#60b8d4; border:1px solid rgba(96,184,212,0.35);
+  border-radius:20px; display:inline-block; padding:4px 14px; margin-bottom:18px;
+}
+.modal-title {
+  font-family:'Inter',sans-serif; font-size:1.5rem; color:#60b8d4;
+  text-shadow:none; line-height:1.2; margin-bottom:6px;
+}
+.modal-subtitle { font-size:0.68rem; color:#8a9ab8; margin-bottom:22px; }
+
+.modal-section { margin-bottom:18px; }
+.modal-section-label {
+  font-size:0.57rem; text-transform:uppercase; letter-spacing:0.12em;
+  color:#60b8d4; opacity:0.7; margin-bottom:8px;
+}
+.modal-section-body {
+  font-size:0.68rem; color:#8a9ab8; line-height:1.85;
+}
+.modal-section-body strong { color:#dce4f2; }
+
+.modal-divider { border:none; border-top:1px solid #252d3d; margin:20px 0; }
+
+.modal-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px; }
+.modal-col {
+  background:#161b24; border:1px solid #252d3d; border-radius:9px; padding:14px 16px;
+}
+.modal-col-label { font-size:0.57rem; text-transform:uppercase; letter-spacing:0.1em; color:#8a9ab8; margin-bottom:6px; }
+.modal-col-val { font-size:0.72rem; color:#dce4f2; line-height:1.7; }
+.modal-col-val span { color:#60b8d4; }
+
+.modal-close-row { text-align:center; }
+.modal-close-btn {
+  padding:12px 48px; background:#60b8d4; color:#000; border:none;
+  border-radius:7px; font-family:'IBM Plex Mono',monospace;
+  font-size:0.78rem; font-weight:600; cursor:pointer; letter-spacing:0.04em;
+}
+.modal-close-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.modal-skip {
+  display:block; margin-top:10px; font-size:0.58rem; color:#4e5f7a; cursor:pointer;
+  background:none; border:none; font-family:'IBM Plex Mono',monospace;
+}
+.modal-skip:hover { color:#8a9ab8; }
 </style>
 </head>
 <body>
+
+<!-- INTRO MODAL -->
+<div class="modal-overlay" id="intro-modal">
+  <div class="modal-box">
+    <div class="modal-tag">CS6903 / 4783 · Project 3 · NYU</div>
+    <div class="modal-title">HE Burnout Explorer</div>
+    <div class="modal-subtitle">Homomorphic Encryption over Outsourced Data · CKKS scheme via TenSEAL</div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">What is this?</div>
+      <div class="modal-section-body">
+        This app demonstrates <strong>Homomorphic Encryption (HE)</strong> — a cryptographic technique
+        that lets a third party (<strong>Carol</strong>) compute queries on data she <em>never decrypts</em>.
+        Alice encrypts a developer burnout dataset using the <strong>CKKS scheme</strong>, sends only
+        ciphertexts to Carol, and Carol returns encrypted results that only Alice can decrypt.
+        The data stays private end-to-end.
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">The Dataset</div>
+      <div class="modal-section-body">
+        <strong>Developer Burnout Dataset</strong> — 7,000 synthetic records modeled on the
+        Kaggle employee burnout dataset. Each row represents one developer with fields for
+        designation, resource allocation, mental fatigue score, hours per week, years of
+        experience, team size, and burn rate (0–1 scale).
+      </div>
+    </div>
+
+    <hr class="modal-divider">
+
+    <div class="modal-cols">
+      <div class="modal-col">
+        <div class="modal-col-label">HE Scheme</div>
+        <div class="modal-col-val">
+          <span>CKKS</span> — approximate arithmetic<br>
+          poly_degree = <span>8192</span><br>
+          security = <span>128-bit</span> (RLWE)
+        </div>
+      </div>
+      <div class="modal-col">
+        <div class="modal-col-label">What you can do</div>
+        <div class="modal-col-val">
+          Run <span>5 query types</span> on ciphertext<br>
+          Compare HE vs plaintext speed<br>
+          Inspect <span>CKKS error</span> (≤ 10⁻⁷)
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-close-row">
+      <button class="modal-close-btn" onclick="closeModal()">▶  Start Exploring</button>
+      <button class="modal-skip" onclick="closeModal(true)">don't show again</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
 
 <div class="topbar">
-  <div class="logo">HE Burnout<small>Homomorphic Encryption · Developer Burnout Dataset · CS6903/4783</small></div>
-  <div class="badge">CKKS · 128-bit · TenSEAL</div>
-</div>
-
-<div class="tab-bar">
-  <button class="tab-btn active" id="tab-query" onclick="showTab('query')">▶  Live Query</button>
-  <button class="tab-btn" id="tab-charts" onclick="showTab('charts')">📊  Performance Charts</button>
+  <div class="topbar-top">
+    <div class="logo">HE Burnout<small>Homomorphic Encryption · Developer Burnout Dataset · CS6903/4783</small></div>
+    <div class="badge">CKKS · 128-bit · TenSEAL</div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-query" onclick="showTab('query')">▶  Live Query</button>
+    <button class="tab-btn" id="tab-charts" onclick="showTab('charts')">📊  Performance Charts</button>
+  </div>
 </div>
 
 <!-- QUERY TAB -->
 <div class="tab-panel active" id="panel-query">
 
-  <div class="pipe">
-    <div class="pstep active" id="ps-1"><div class="pnum">1</div><div>Alice<br>Keygen</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-2"><div class="pnum">2</div><div>Alice<br>Encrypt</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-3"><div class="pnum">3</div><div>Carol<br>Receives</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-4"><div class="pnum">4</div><div>Carol<br>Evaluates</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-5"><div class="pnum">5</div><div>Alice<br>Decrypts</div></div>
-    <div class="parr">→</div>
-    <div class="pstep" id="ps-6"><div class="pnum">✓</div><div>Result<br>Out</div></div>
-  </div>
-
   <div class="grid2">
     <div class="card">
-      <div class="card-label">① Select Dataset Size</div>
+      <div class="card-header">
+        <div class="card-step">Step 01</div>
+        <div class="card-label">Select Dataset Size</div>
+      </div>
       <div class="btn-row" id="size-group">
         <button class="sel-btn" onclick="pickSize(this,100)">N = 100</button>
         <button class="sel-btn active" onclick="pickSize(this,500)">N = 500</button>
@@ -215,7 +338,10 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
       </div>
     </div>
     <div class="card">
-      <div class="card-label">② Select Query (Carol evaluates on ciphertext)</div>
+      <div class="card-header">
+        <div class="card-step">Step 02</div>
+        <div class="card-label">Select Query</div>
+      </div>
       <div class="btn-row" id="query-group">
         <button class="sel-btn active" onclick="pickQuery(this,'avg_burn_rate')">avg(burn_rate)</button>
         <button class="sel-btn" onclick="pickQuery(this,'avg_fatigue')">avg(fatigue)</button>
@@ -228,14 +354,34 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
     </div>
   </div>
 
-  <div class="run-wrap">
-    <button class="run-btn" id="run-btn" onclick="runQuery()">▶  Run Encrypted Query</button>
-  </div>
+  <div class="run-section">
+    <div class="run-section-top">
+      <div class="card-header" style="margin-bottom:0;">
+        <div class="card-step">Step 03</div>
+        <div class="card-label">Run Encrypted Query</div>
+      </div>
+      <button class="run-btn" id="run-btn" onclick="runQuery()">▶  Run Encrypted Query</button>
+    </div>
 
-  <div class="log-box">
-    <div class="log-label">Execution Log</div>
-    <div id="log-lines">
-      <div class="log-row"><span class="log-t">ready</span><span>Select a query and click Run ↑</span></div>
+    <div class="pipe" style="margin-bottom:12px;">
+      <div class="pstep active" id="ps-1"><div class="pnum">1</div><div>Alice<br>Keygen</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-2"><div class="pnum">2</div><div>Alice<br>Encrypt</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-3"><div class="pnum">3</div><div>Carol<br>Receives</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-4"><div class="pnum">4</div><div>Carol<br>Evaluates</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-5"><div class="pnum">5</div><div>Alice<br>Decrypts</div></div>
+      <div class="parr">→</div>
+      <div class="pstep" id="ps-6"><div class="pnum">✓</div><div>Result<br>Out</div></div>
+    </div>
+
+    <div class="log-box">
+      <div class="log-label">Execution Log</div>
+      <div id="log-lines">
+        <div class="log-row"><span class="log-t">ready</span><span>Select a query and click Run ↑</span></div>
+      </div>
     </div>
   </div>
 
@@ -298,7 +444,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
           </div>
           <div class="res-meta-item">
             <div class="rmi-label">Privacy</div>
-            <div class="rmi-val" style="color:#ff7043;">None ⚠</div>
+            <div class="rmi-val" style="color:#e8754f;">None ⚠</div>
           </div>
         </div>
       </div>
@@ -437,40 +583,7 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
     <div class="chart-card">
       <div class="chart-title">CKKS vs BFV — All Queries at N = 7,000</div>
       <div class="chart-sub">Same 5 queries run under both schemes. BFV uses integer-scaled arithmetic via Pyfhel; CKKS uses native floats via TenSEAL.</div>
-      <div class="chart-grid">
-        <div>
-          <div style="font-size:0.7rem;color:#6a8aaa;margin-bottom:8px;">Query evaluation time (seconds)</div>
-          <div style="position:relative;height:260px"><canvas id="ch-bfv-time"></canvas></div>
-        </div>
-        <div>
-          <div style="font-size:0.7rem;color:#6a8aaa;margin-bottom:8px;">Result error |HE − plaintext|</div>
-          <div style="position:relative;height:260px"><canvas id="ch-bfv-err"></canvas></div>
-        </div>
-      </div>
-      <div style="margin-top:16px;background:#111520;border:1px solid #1c2436;border-radius:8px;padding:14px 16px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.65rem;">
-          <div>
-            <div style="color:#00ffc8;font-weight:600;margin-bottom:6px;">CKKS (TenSEAL)</div>
-            <div style="color:#6a8aaa;line-height:1.8;">
-              Native float support — no scaling needed<br>
-              Approximate arithmetic — error &lt; 10⁻⁷<br>
-              Faster on avg/weighted queries (~3.5× vs BFV)<br>
-              Needs Galois + Relin keys<br>
-              Best for: float statistics, analytics
-            </div>
-          </div>
-          <div>
-            <div style="color:#ff7043;font-weight:600;margin-bottom:6px;">BFV (Pyfhel)</div>
-            <div style="color:#6a8aaa;line-height:1.8;">
-              Integer-only — floats scaled ×1000 first<br>
-              Exact arithmetic — zero approximation error<br>
-              Faster on simple vector ops (no rotations)<br>
-              Simpler key setup<br>
-              Best for: counting, exact integer queries
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="chart-wrap-tall"><canvas id="ch-bfv"></canvas></div>
       <div class="insight"><strong>Key insight:</strong> CKKS is ~3.5× faster on rotation-heavy queries (avg, weighted) due to native float support. BFV edges ahead on simple vector ops where no rotations are needed.</div>
     </div>
   </div>
@@ -479,6 +592,19 @@ body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index
 </div>
 
 <script>
+(function() {
+  if (localStorage.getItem('he_intro_seen')) {
+    document.getElementById('intro-modal').style.display = 'none';
+  }
+})();
+
+function closeModal(permanent) {
+  var el = document.getElementById('intro-modal');
+  el.classList.add('hide');
+  if (permanent) localStorage.setItem('he_intro_seen', '1');
+  setTimeout(function() { el.style.display = 'none'; }, 260);
+}
+
 var selN = 500;
 var selQ = 'avg_burn_rate';
 var queryHistory = [];
@@ -667,8 +793,8 @@ function clearHistory() {
 }
 
 var GC = {color: 'rgba(255,255,255,0.07)'};
-var TC = {color: '#6a8aaa', font: {family: 'IBM Plex Mono', size: 10}};
-var COLS = ['#00ffc8','#ff7043','#a78bfa','#ffe246','#4dd0e1'];
+var TC = {color: '#8a9ab8', font: {family: 'IBM Plex Mono', size: 10}};
+var COLS = ['#60b8d4','#e8754f','#9d85e8','#f5b942','#64b5e8'];
 var QKS = ['Q1','Q2','Q3','Q4','Q5'];
 var QNS = ['Q1 avg(burn)','Q2 avg(fatigue)','Q3 weighted','Q4 scaled','Q5 stress'];
 
@@ -676,11 +802,11 @@ function baseOpts(yLabel, logY) {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {legend: {labels: {color: '#cdd9f0', font: {family: 'IBM Plex Mono', size: 11}}}},
+    plugins: {legend: {labels: {color: '#dce4f2', font: {family: 'IBM Plex Mono', size: 11}}}},
     scales: {
       x: {grid: GC, ticks: TC},
       y: {grid: GC, ticks: TC, type: logY ? 'logarithmic' : 'linear',
-          title: {display: true, text: yLabel, color: '#6a8aaa', font: {family: 'IBM Plex Mono', size: 10}}}
+          title: {display: true, text: yLabel, color: '#8a9ab8', font: {family: 'IBM Plex Mono', size: 10}}}
     }
   };
 }
@@ -689,8 +815,8 @@ function buildCharts() {
   new Chart(document.getElementById('ch-upload'), {
     type: 'bar',
     data: {labels: XL, datasets: [
-      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.uhe;}), backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
-      {label: 'Plaintext', data: BENCH.map(function(d){return d.upt;}), backgroundColor: 'rgba(255,112,67,0.15)', borderColor: '#ff7043', borderWidth: 1.5}
+      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.uhe;}), backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
+      {label: 'Plaintext', data: BENCH.map(function(d){return d.upt;}), backgroundColor: 'rgba(232,117,79,0.15)', borderColor: '#e8754f', borderWidth: 1.5}
     ]},
     options: baseOpts('Time (s)', false)
   });
@@ -707,8 +833,8 @@ function buildCharts() {
   new Chart(document.getElementById('ch-compare'), {
     type: 'bar',
     data: {labels: XL, datasets: [
-      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.q.Q1.ht;}), backgroundColor: 'rgba(0,255,200,0.15)', borderColor: '#00ffc8', borderWidth: 1.5},
-      {label: 'Plaintext', data: BENCH.map(function(d){return d.q.Q1.pt;}), backgroundColor: 'rgba(255,112,67,0.15)', borderColor: '#ff7043', borderWidth: 1.5}
+      {label: 'HE (CKKS)', data: BENCH.map(function(d){return d.q.Q1.ht;}), backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
+      {label: 'Plaintext', data: BENCH.map(function(d){return d.q.Q1.pt;}), backgroundColor: 'rgba(232,117,79,0.15)', borderColor: '#e8754f', borderWidth: 1.5}
     ]},
     options: baseOpts('Time (s)', false)
   });
@@ -733,52 +859,70 @@ function buildCharts() {
     options: baseOpts('|HE - PT|', true)
   });
 
-  var BFV_QUERIES = ['avg(burn)', 'avg(fatigue)', 'weighted', 'scaled hrs', 'stress idx'];
-  var CKKS_TIMES = [0.174, 0.163, 0.087, 0.034, 0.012];
-  var BFV_TIMES  = [0.610, 0.594, 0.310, 0.008, 0.007];
-  var CKKS_ERRS  = [2e-9,  1.9e-9, 6.3e-5, 2.2e-7, 4.4e-9];
-  var BFV_ERRS   = [0,     0,      0,       0,      0];
-
-  new Chart(document.getElementById('ch-bfv-time'), {
-    type: 'bar',
-    data: {
-      labels: BFV_QUERIES,
-      datasets: [
-        {label:'CKKS (TenSEAL)', data: CKKS_TIMES, backgroundColor:'rgba(0,255,200,0.15)', borderColor:'#00ffc8', borderWidth:1.5},
-        {label:'BFV (Pyfhel)',   data: BFV_TIMES,  backgroundColor:'rgba(255,112,67,0.15)', borderColor:'#ff7043', borderWidth:1.5}
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {legend: {labels: {color:'#cdd9f0', font:{family:'IBM Plex Mono', size:11}}}},
-      scales: {
-        x: {grid:{color:'rgba(255,255,255,0.07)'}, ticks:{color:'#6a8aaa', font:{size:10}}},
-        y: {grid:{color:'rgba(255,255,255,0.07)'}, ticks:{color:'#6a8aaa', font:{size:10}},
-            title:{display:true, text:'seconds', color:'#6a8aaa', font:{size:10}}}
-      }
-    }
-  });
-
-  new Chart(document.getElementById('ch-bfv-err'), {
-    type: 'bar',
-    data: {
-      labels: BFV_QUERIES,
-      datasets: [
-        {label:'CKKS (TenSEAL)', data: CKKS_ERRS, backgroundColor:'rgba(0,255,200,0.15)', borderColor:'#00ffc8', borderWidth:1.5},
-        {label:'BFV (Pyfhel)',   data: BFV_ERRS,  backgroundColor:'rgba(255,112,67,0.15)', borderColor:'#ff7043', borderWidth:1.5}
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {legend: {labels: {color:'#cdd9f0', font:{family:'IBM Plex Mono', size:11}}}},
-      scales: {
-        x: {grid:{color:'rgba(255,255,255,0.07)'}, ticks:{color:'#6a8aaa', font:{size:10}}},
-        y: {grid:{color:'rgba(255,255,255,0.07)'}, ticks:{color:'#6a8aaa', font:{size:10}},
-            type:'logarithmic',
-            title:{display:true, text:'|HE - plaintext|', color:'#6a8aaa', font:{size:10}}}
-      }
-    }
-  });
+  var BC = """ + json.dumps(BENCH_COMPARE) + """;
+  var CKKS_MAP = {"Q1": "Q1_avg_burn_rate", "Q2": "Q2_avg_mental_fatigue", "Q3": "Q3_weighted_burn_risk", "Q4": "Q4_scaled_hours", "Q5": "Q5_stress_index"};
+  if (BC.length && BC[BC.length-1].bfv_queries) {
+    var r7k = BC[BC.length - 1];
+    var ks = Object.keys(r7k.bfv_queries);
+    var labels = ks.map(function(k){ return r7k.bfv_queries[k].label; });
+    var ckksReal = ks.map(function(k){ return r7k.queries[CKKS_MAP[k]].he_time_s; });
+    var bfvReal  = ks.map(function(k){ return r7k.bfv_queries[k].bfv_time_s; });
+    new Chart(document.getElementById('ch-bfv'), {
+      type: 'bar',
+      data: {labels: labels, datasets: [
+        {label: 'CKKS (TenSEAL)', data: ckksReal,
+         backgroundColor: 'rgba(96,184,212,0.15)', borderColor: '#60b8d4', borderWidth: 1.5},
+        {label: 'BFV (Pyfhel)',   data: bfvReal,
+         backgroundColor: 'rgba(196,84,110,0.15)', borderColor: '#c4546e', borderWidth: 1.5}
+      ]},
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {padding: {bottom: 30}},
+        plugins: {
+          legend: {labels: {color: '#dce4f2', font: {family: 'IBM Plex Mono', size: 11}}},
+          tooltip: {
+            callbacks: {
+              title: function(items) { return items[0].label; },
+              label: function(item) {
+                var ct = ckksReal[item.dataIndex];
+                var bt = bfvReal[item.dataIndex];
+                if (item.datasetIndex === 0) return 'CKKS: ' + ct.toFixed(4) + 's';
+                return ['BFV:  ' + bt.toFixed(4) + 's', 'Ratio: ' + (bt/Math.max(ct,1e-9)).toFixed(1) + '× slower'];
+              }
+            },
+            backgroundColor: '#161b24', borderColor: '#252d3d', borderWidth: 1,
+            titleColor: '#dce4f2', bodyColor: '#8a9ab8', padding: 10, displayColors: true
+          }
+        },
+        scales: {
+          x: {grid: GC, ticks: TC},
+          y: {grid: GC, ticks: TC, type: 'linear',
+              title: {display: true, text: 'Query time (s)', color: '#8a9ab8',
+                      font: {family: 'IBM Plex Mono', size: 10}}}
+        }
+      },
+      plugins: [{
+        id: 'bfvLabels',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx;
+          var xAxis = chart.scales.x;
+          ctx.save();
+          ctx.font = '9px IBM Plex Mono';
+          ctx.textAlign = 'center';
+          for (var i = 0; i < ks.length; i++) {
+            var x = xAxis.getPixelForValue(i);
+            var y = chart.chartArea.bottom + 28;
+            ctx.fillStyle = '#60b8d4';
+            ctx.fillText('C:' + ckksReal[i].toFixed(3) + 's', x, y);
+            ctx.fillStyle = '#c4546e';
+            ctx.fillText('B:' + bfvReal[i].toFixed(3) + 's', x, y + 13);
+          }
+          ctx.restore();
+        }
+      }]
+    });
+  }
 }
 </script>
 </body>
@@ -825,4 +969,4 @@ def run_query():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=True)
